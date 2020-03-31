@@ -1,5 +1,5 @@
 
-from flask import Flask, request,make_response,render_template, redirect, url_for
+from flask import Flask, request,make_response,render_template, redirect
 from werkzeug.utils import secure_filename
 from os import path
 app = Flask(__name__)
