@@ -1,2 +1,6 @@
 test
 .DS_Store
+.idea/
+.mypy_cache/
+sourceCode/__pycache__/
+static/downloads/ans.csv

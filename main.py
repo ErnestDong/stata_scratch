@@ -8,6 +8,11 @@ app = Flask(__name__)
 commandList = ['test']
 @app.route("/", methods=['GET', 'POST'])
 def upload():
+    """
+    upload file to ./static/uploads/*
+    write the filename into ./static/loadfile.txt
+    jump to upload page to preview data and choose method
+    """
     try:
         if request.method == 'POST':
             f = request.files["file"]
