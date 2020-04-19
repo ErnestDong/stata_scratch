@@ -67,11 +67,11 @@ def show():
     tmp = request.form["command"]
     dependentVariable = request.form["dependent"]
     independentVariable = request.form.getlist("independent")
-    independentVariable[-1] = independentVariable[-1][:-2]
+    independentVariable[-1] = independentVariable[-1]
     varFiles = open("./static/var.txt", "a", encoding="utf-8")
-    print(dependentVariable, '\t', independentVariable, file=varFiles)
+    print(dependentVariable, '\t', independentVariable,file=varFiles)
     varFiles.close()
-    gdnfile = eval(tmp + ".showAns({},{})".format(independentVariable, dependentVariable))
+    gdnfile = eval(tmp + ".showAns({},'{}')".format(independentVariable, dependentVariable))
     print(tmp, file=wfile)
     wfile.close()
     rfile = open("./static/commandhis.txt", "r", encoding="utf-8")
@@ -99,7 +99,7 @@ def showplot():
         lst = f.readlines()[-2][:-1].split('\t')
     with open("./static/commandhis.txt") as f:
         command = f.readlines()[-1][:-1]
-        fig = eval(command + ".create_figure({},{})".format(lst[0], lst[1]))
+        fig = eval(command + ".create_figure('{}',{})".format(lst[0], lst[1]))
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
