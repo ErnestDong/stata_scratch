@@ -120,10 +120,26 @@ def showResult():
         commandStr += "<br><h2>please choose your independent variable(s)</h2>"
         for i in title:
             commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(i, i)
-        return render_template("show.html", file="<br>".join(fileinfo), command=commandStr)
+        return render_template("show.html", file=gethtml(fileinfo), command=commandStr)
     except Exception:
         return redirect("error")
 
+def gethtml(lst):
+    lenth=len(lst)
+    html="<table border='1'><tr>"
+    for line in range(lenth):
+        if line == 0:
+            tmp=lst[line].split(',')
+            for i in tmp:
+                html+="<th>{}</th>".format(i)
+            html+="</tr>"
+        else:
+            html+="<tr>"
+            tmp=lst[line].split(',')
+            for i in tmp:
+                html+="<td>{}</td>".format(i)
+            html+="</tr>"
+    return html+"</table>"
 
 @app.route("/result", methods=['GET', 'POST'])
 def show():
