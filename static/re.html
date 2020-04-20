@@ -6,8 +6,13 @@
             var password = document.getElementById("pw").value;
             var repassword = document.getElementById("repw").value;
             if (password == repassword) {
-                document.getElementById("txt1").innerHTML = "";
-                document.getElementById("submit").disabled = false;
+                if (password.includes("\\") || password.includes("\"") || password.includes("\'")) {
+                    document.getElementById("txt1").innerHTML = "password is illegal";
+                    document.getElementById("submit").disabled = true;
+                } else {
+                    document.getElementById("txt1").innerHTML = "";
+                    document.getElementById("submit").disabled = false;
+                }
 
             } else {
                 document.getElementById("txt1").innerHTML = "please check your password";
