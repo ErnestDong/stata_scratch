@@ -4,3 +4,6 @@ test
 .mypy_cache/
 sourceCode/__pycache__/
 static/downloads/ans.csv
+flaskPart.py
+./static/dcy
+__pycache__
