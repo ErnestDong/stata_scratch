@@ -172,6 +172,7 @@ def show():
                     <a href="/datainfo">Click to Download the Result</a>
                     <h2>command history</h2>
                     <p>{}</p>
+                    <a href="/upload">return to the page before</a>
                 </body>
                 </html>
             """.format(gdnfile, content)
