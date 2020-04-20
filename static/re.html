@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title>Register</title>
+    <script type="text/javascript">
+        function checkpassword() {
+            var password = document.getElementById("pw").value;
+            var repassword = document.getElementById("repw").value;
+            if (password == repassword) {
+                document.getElementById("txt1").innerHTML = "";
+                document.getElementById("submit").disabled = false;
+
+            } else {
+                document.getElementById("txt1").innerHTML = "please check your password";
+                document.getElementById("submit").disabled = true;
+            }
+        }
+
+        function checkname() {
+            var username = document.getElementById("nm").value;
+            if (username.includes("\\") || username.includes("\"") || username.includes("\'")) {
+                document.getElementById("txt1").innerHTML = "username is illegal";
+                document.getElementById("submit").disabled = true;
+            } else {
+                document.getElementById("txt2").innerHTML = "";
+                document.getElementById("submit").disabled = false;
+            }
+        }
+
+        function isNull() {
+            var name = document.getElementById("nm").value;
+            if (name.length == 0) {
+                confirm("Empty username!");
+                return false;
+            }
+            var pass = document.getElementById("pw");
+            if (pass.length == 0) {
+                confirm("emptypassword!");
+                return false;
+            }
+            return true;
+        }
+
+    </script>
+</head>
+<body>
+<form action="/" method="post" onsubmit="return isNull()">
+    username: <input type=text id="nm" name="addUser" onkeyup="checkname()"><span id="txt1"></span><br>
+    password: <input type=password id="pw" name="addpwd"><br>
+    password: <input type="password" id="repw" onkeyup="checkpassword()"><span id="txt2"></span><br>
+
+    <input type="submit" id="submit"/>
+</form>
+</body>
+</html>
