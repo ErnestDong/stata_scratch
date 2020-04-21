@@ -8,41 +8,11 @@ import os
 import re
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import pandas as pd
-# functions to be used
-
-def gethtml(lst):
-    lenth = len(lst)
-    html = "<table border='1'><tr>"
-    for line in range(lenth):
-        if line == 0:
-            tmp = lst[line].split(',')
-            for i in tmp:
-                html += "<th>{}</th>".format(i)
-            html += "</tr>"
-        else:
-            html += "<tr>"
-            tmp = lst[line].split(',')
-            for i in tmp:
-                html += "<td>{}</td>".format(i)
-            html += "</tr>"
-    return html + "</table>"
-
-def whoami():
-    """
-    get who am i
-    :return: last username
-    """
-    rfile = open("whoami", "r", encoding="utf-8")
-    name = rfile.readlines()[-1][:-1]
-    rfile.close()
-    return name
-
+from matplotlib.figure import Figure
+from sourceCode.func import get_corr, gethtml, whoami
 
 app = Flask(__name__)
 commandList = ['test', 'tests']
-
-
-# add command in commandList
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -125,7 +95,7 @@ def upload():
 def checkResult():
     """
     show about 20 lines of data
-    let user to choose command, dependent variable 
+    clean data
     """
     name = whoami()
     try:
@@ -133,34 +103,33 @@ def checkResult():
             filename = f.readlines()[-1][:-1]
         uploadFile = open(filename, "r", encoding="utf-8")
         fileinfo = uploadFile.readlines()[:20]
+        fileinfo = gethtml(fileinfo)
         uploadFile.close()
-        title = re.split(r'[,]', fileinfo[0])
-        commandStr = "<h2>please choose your command</h2>"
-        for i in commandList:
-            commandStr += "<input type='radio' value='{}' name='command'>{}<br>".format(i, i)
-        commandStr += "<br><h2>please choose your dependent variable</h2>"
-        return render_template("show.html", file=gethtml(fileinfo))
+        return render_template("show.html", file=fileinfo)
     except Exception:
         return redirect("error")
+
+
 @app.route("/upload", methods=['GET', 'POST'])
 def showResult():
     """
-    show about 20 lines of data
+    show corr
     let user to choose command, dependent variable
     """
     name = whoami()
     try:
-        nullMethod=request.form["isnull"]
+        nullMethod = request.form["isnull"]
         with open("./static/{}/loadfile.txt".format(name)) as f:
             filename = f.readlines()[-1][:-1]
-        data=pd.read_csv(filename)
+        data = pd.read_csv(filename)
         if nullMethod[0] == "d":
-            data=data.dropna()
+            data = data.dropna()
         else:
-            data=data.fillna(0)
-        data.to_csv(filename,encoding="utf-8")
-        commandStr = "<h2>please choose your command</h2>"
-        title=list(data.columns)
+            data = data.fillna(0)
+        commandStr = "<h2>the corr matrix is</h2>" + get_corr(data)
+        data.to_csv(filename, encoding="utf-8")
+        commandStr += "<h2>please choose your command</h2>"
+        title = list(data.columns)
         for i in commandList:
             commandStr += "<input type='radio' value='{}' name='command'>{}<br>".format(i, i)
         commandStr += "<br><h2>please choose your dependent variable</h2>"
@@ -174,14 +143,14 @@ def showResult():
         return redirect("error")
 
 
-
-
 @app.route("/result", methods=['GET', 'POST'])
 def show():
     name = whoami()
     """
     show the result
     """
+    with open("./static/{}/loadfile.txt".format(name)) as f:
+        filename = f.readlines()[-1][:-1]
     wfile = open("./static/{}/commandhis.txt".format(name), "a", encoding="utf-8")
     tmp = request.form["command"]
     dependentVariable = request.form["dependent"]
@@ -208,9 +177,10 @@ def show():
                     <h2>command history</h2>
                     <p>{}</p>
                     <a href="/check">preview again</a>
+                    <a href="./static/{}/uploads/{}>download your raw data</a>
                 </body>
                 </html>
-            """.format(gdnfile, content)
+            """.format(gdnfile, content,name,filename)
 
 
 @app.route("/plot.png")
@@ -223,6 +193,20 @@ def showplot():
         fig = eval(command + ".create_figure('{}',{},'{}')".format(lst[0], lst[1], name))
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
+
+
+@app.route("/corr.png")
+def showcorr():
+    name = whoami()
+    with open("./static/{}/loadfile.txt".format(name)) as f:
+        filename = f.readlines()[-1][:-1]
+    data = pd.read_csv(filename)
+    tmp = data.corr()
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
 
 
