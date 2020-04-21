@@ -3,7 +3,7 @@ import random
 
 
 def showAns(dependent="", independent=[],username=""):
-    wfile = open("./static/{}/downloads/ans.csv".format(username), "a", encoding="utf-8")
+    wfile = open("./static/{}/downloads/ans.csv".format(username), "w", encoding="utf-8")
     print("hello,world,", file=wfile)
     wfile.close()
     return "<h1>Hello World</h1>"

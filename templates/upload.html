@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
+<head>
     <meta charset="UTF-8"/>
     <title>Upload</title>
-  </head>
-  <body>
-    <form action="" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" />
-    <input type="submit" value="upload" />
-    </form>
-  </body>
+    <script>
+        function help() {
+            alert("You can upload your csv file now");
+        }
+    </script>
+</head>
+<body>
+<form action="" method="post" enctype="multipart/form-data">
+    <input type="file" name="file"/>
+    <input type="submit" value="upload"/>
+</form>
+<button onclick="help()">help</button>
+</body>
 </html>

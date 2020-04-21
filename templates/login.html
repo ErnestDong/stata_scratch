@@ -4,6 +4,11 @@
     <script>
       {{script|safe}}
     </script>
+      <script>
+          function help() {
+              alert("This is a login page.");
+          }
+      </script>
   </head>
   <body>
     <form action="/" method="post">
@@ -12,5 +17,6 @@
       <input type="submit" /><br>
     </form>
     <a href="./static/re.html">Register now</a>
+  <button onclick="help()">help</button>
   </body>
 </html>

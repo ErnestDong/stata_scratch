@@ -1,12 +1,18 @@
 <html>
-  <head>
+<head>
     <title>View and Choose</title>
-  </head>
-  <body>
-    <h1>Your Data</h1>
-    <form action="/result" method="post">
-        {{command|safe}}
-      <input type="submit" />
-    </form>
-  </body>
+    <script>
+        function help() {
+            alert("You can choose what to do with null value of your data");
+        }
+    </script>
+</head>
+<body>
+<h1>Your Data</h1>
+<form action="/result" method="post">
+    {{ command|safe }}
+    <input type="submit"/>
+</form>
+<button onclick="help()">help</button>
+</body>
 </html>

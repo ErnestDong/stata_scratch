@@ -7,13 +7,19 @@
  * @ContactAt: dongcylyj@gmail.com
  -->
 <html>
-  <head>
+<head>
     <title>ans</title>
-  </head>
-  <body>
-    <h1>datainfo</h1>
-    {{info|safe}} <br />
-    {{pic|safe}}<br />
-    {{link|safe}}
-  </body>
+    <script>
+        function help() {
+            alert("You can see the analysis of your data and download what you need");
+        }
+    </script>
+</head>
+<body>
+<h1>datainfo</h1>
+{{ info|safe }} <br/>
+{{ pic|safe }}<br/>
+{{ link|safe }}
+<button onclick="help()">help</button>
+</body>
 </html>
