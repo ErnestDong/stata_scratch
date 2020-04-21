@@ -7,9 +7,42 @@ import io
 import os
 import re
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import pandas as pd
+# functions to be used
+
+def gethtml(lst):
+    lenth = len(lst)
+    html = "<table border='1'><tr>"
+    for line in range(lenth):
+        if line == 0:
+            tmp = lst[line].split(',')
+            for i in tmp:
+                html += "<th>{}</th>".format(i)
+            html += "</tr>"
+        else:
+            html += "<tr>"
+            tmp = lst[line].split(',')
+            for i in tmp:
+                html += "<td>{}</td>".format(i)
+            html += "</tr>"
+    return html + "</table>"
+
+def whoami():
+    """
+    get who am i
+    :return: last username
+    """
+    rfile = open("whoami", "r", encoding="utf-8")
+    name = rfile.readlines()[-1][:-1]
+    rfile.close()
+    return name
+
 
 app = Flask(__name__)
 commandList = ['test', 'tests']
+
+
+# add command in commandList
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -31,15 +64,15 @@ def passwd():
             """if password is wrong"""
             return render_template("login.html", script="alert('Wrong Password!')")
         """if all is well"""
-        tmp=open("whoami","a",encoding="utf-8")
-        print(name,file=tmp)
+        tmp = open("whoami", "a", encoding="utf-8")
+        print(name, file=tmp)
         tmp.close()
         return redirect("data")
     except:
         """if redirected from register"""
         try:
-            name=request.form["addUser"]
-            passwd=request.form["addpwd"]
+            name = request.form["addUser"]
+            passwd = request.form["addpwd"]
             passwd_file = open("./passwd", "r", encoding='utf-8')
             data = eval(passwd_file.read())
             # print(type(data))
@@ -48,11 +81,11 @@ def passwd():
             if name in data:
                 """if username exists"""
                 return render_template("login.html", script="alert('name is registered!Try another name.')")
-            data[name]=passwd
+            data[name] = passwd
             passwd_file = open("./passwd", "w", encoding='utf-8')
-            print(data,file=passwd_file)
+            print(data, file=passwd_file)
             passwd_file.close()
-            return render_template("login.html",script="alert('registered!')")
+            return render_template("login.html", script="alert('registered!')")
         except:
             """if user just clicks the button"""
             return render_template("login.html", scipt="")
@@ -67,10 +100,10 @@ def upload():
     """
     try:
         tmp = open("whoami", "r", encoding="utf-8")
-        name=tmp.readlines()[-1][:-1]
+        name = tmp.readlines()[-1][:-1]
         tmp.close()
-        if not os.path.exists("./static/"+name):
-            os.mkdir("./static/"+name)
+        if not os.path.exists("./static/" + name):
+            os.mkdir("./static/" + name)
             os.mkdir("./static/{}/uploads".format(name))
             os.mkdir("./static/{}/downloads".format(name))
         if request.method == 'POST':
@@ -82,23 +115,14 @@ def upload():
             print(file_name, file=uploadFileName)
             uploadFileName.close()
             f.save(file_name)
-            return redirect("upload")
+            return redirect("check")
         return render_template('upload.html')
     except Exception:
         return redirect("error")
-def whoami():
-    """
-    get who am i
-    :return: last username
-    """
-    rfile=open("whoami","r",encoding="utf-8")
-    name=rfile.readlines()[-1][:-1]
-    rfile.close()
-    return name
 
 
-@app.route("/upload", methods=['GET', 'POST'])
-def showResult():
+@app.route("/check", methods=['GET', 'POST'])
+def checkResult():
     """
     show about 20 lines of data
     let user to choose command, dependent variable 
@@ -115,31 +139,42 @@ def showResult():
         for i in commandList:
             commandStr += "<input type='radio' value='{}' name='command'>{}<br>".format(i, i)
         commandStr += "<br><h2>please choose your dependent variable</h2>"
+        return render_template("show.html", file=gethtml(fileinfo))
+    except Exception:
+        return redirect("error")
+@app.route("/upload", methods=['GET', 'POST'])
+def showResult():
+    """
+    show about 20 lines of data
+    let user to choose command, dependent variable
+    """
+    name = whoami()
+    try:
+        nullMethod=request.form["isnull"]
+        with open("./static/{}/loadfile.txt".format(name)) as f:
+            filename = f.readlines()[-1][:-1]
+        data=pd.read_csv(filename)
+        if nullMethod[0] == "d":
+            data=data.dropna()
+        else:
+            data=data.fillna(0)
+        data.to_csv(filename,encoding="utf-8")
+        commandStr = "<h2>please choose your command</h2>"
+        title=list(data.columns)
+        for i in commandList:
+            commandStr += "<input type='radio' value='{}' name='command'>{}<br>".format(i, i)
+        commandStr += "<br><h2>please choose your dependent variable</h2>"
         for i in title:
             commandStr += "<input type='radio' value='{}' name='dependent'>{}<br>".format(i, i)
         commandStr += "<br><h2>please choose your independent variable(s)</h2>"
         for i in title:
             commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(i, i)
-        return render_template("show.html", file=gethtml(fileinfo), command=commandStr)
+        return render_template("clean.html", command=commandStr)
     except Exception:
         return redirect("error")
 
-def gethtml(lst):
-    lenth=len(lst)
-    html="<table border='1'><tr>"
-    for line in range(lenth):
-        if line == 0:
-            tmp=lst[line].split(',')
-            for i in tmp:
-                html+="<th>{}</th>".format(i)
-            html+="</tr>"
-        else:
-            html+="<tr>"
-            tmp=lst[line].split(',')
-            for i in tmp:
-                html+="<td>{}</td>".format(i)
-            html+="</tr>"
-    return html+"</table>"
+
+
 
 @app.route("/result", methods=['GET', 'POST'])
 def show():
@@ -155,7 +190,7 @@ def show():
     varFiles = open("./static/{}/var.txt".format(name), "a", encoding="utf-8")
     print(dependentVariable, '\t', independentVariable, file=varFiles)
     varFiles.close()
-    gdnfile = eval(tmp + ".showAns('{}',{},'{}')".format(dependentVariable,independentVariable, name))
+    gdnfile = eval(tmp + ".showAns('{}',{},'{}')".format(dependentVariable, independentVariable, name))
     print(tmp, file=wfile)
     wfile.close()
     rfile = open("./static/{}/commandhis.txt".format(name), "r", encoding="utf-8")
@@ -172,7 +207,7 @@ def show():
                     <a href="/datainfo">Click to Download the Result</a>
                     <h2>command history</h2>
                     <p>{}</p>
-                    <a href="/upload">return to the page before</a>
+                    <a href="/check">preview again</a>
                 </body>
                 </html>
             """.format(gdnfile, content)
@@ -185,7 +220,7 @@ def showplot():
         lst = f.readlines()[-1][:-1].split('\t')
     with open("./static/{}/commandhis.txt".format(name)) as f:
         command = f.readlines()[-1][:-1]
-        fig = eval(command + ".create_figure('{}',{},'{}')".format(lst[0], lst[1],name))
+        fig = eval(command + ".create_figure('{}',{},'{}')".format(lst[0], lst[1], name))
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
@@ -208,12 +243,9 @@ def cerr():
           </head>
           <body>
           <script>
-          alert("Please Check Your Data!")
+          alert("Please Check Your Data Or Login")
           </script>
-            <form action="" method="post" enctype="multipart/form-data">
-              <input type="file" name="file" />
-              <input type="submit" value="upload" />
-            </form>
+            <a href="/">return to login page</a>
           </body>
         </html>
     """

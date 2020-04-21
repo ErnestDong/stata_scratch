@@ -5,9 +5,9 @@
   <body>
     <h1>Your Data</h1>
     {{file|safe}}
-    <p>please choose your command</p>
-    <form action="/result" method="post">
-      {{command|safe}}
+    <form action="/upload" method="post">
+        <input type="radio" name="isnull" value="drop" checked="checked">drop null value<br>
+        <input type="radio" name="isnull" value="replace">replace null with 0<br>
       <input type="submit" />
     </form>
   </body>

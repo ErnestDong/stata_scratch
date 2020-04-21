@@ -16,15 +16,7 @@ test 中的命令要留出来两个，一个是 showAns，参数为因变量(str
 
 ## About files
 
-./static/downloads/ans.csv：用于储存结果与下载
-
-./static/uploads/\*：用于储存上传结果
-
-./static/commandhis.txt：用于储存历史命令（美化时加上历史命令窗口）
-
-./static/loadfile.txt：储存文件路径
-
-./static/var.txt：显示选择的因变量自变量，格式为：因变量str，自变量list，读的时候直接读最后两个就好
+见doc/about_flask
 
 # TODO
 - [ ] TODO1
