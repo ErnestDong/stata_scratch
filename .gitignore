@@ -7,3 +7,8 @@ static/downloads/ans.csv
 flaskPart.py
 ./static/dcy
 __pycache__
+sourceCode/PlotResult.py
+sourceCode/TestData.py
+sourceCode/CleanData.py
+sourceCode/summary.py
+sourceCode/daily_Ashare.csv
