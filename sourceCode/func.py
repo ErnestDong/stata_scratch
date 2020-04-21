@@ -1,3 +1,4 @@
+import pandas as pd
 def gethtml(lst):
     lenth = len(lst)
     html = "<table border='1'><tr>"
@@ -45,7 +46,10 @@ def get_corr(data):
     for i in lst:
         ans+="<tr>"
         for j in i:
-            ans+="<td bgcolor='#{}'>{}</td>".format(colorize(j),str(j)[:4])
+            if j not in name:
+                ans+="<td bgcolor='#{}'>{}</td>".format(colorize(j),str(j)[:4])
+            else:
+                ans+="<td bgcolor='#{}'>{}</td>".format(colorize(j),str(j))
         ans+="</tr>"
     return ans+"</table>"
 
@@ -71,3 +75,6 @@ def colorize(corr):
     if corr < 0.9:
         return "246802"
     return "2a5caa"
+if __name__ == '__main__':
+    data=pd.read_csv("./tk/daily_Ashare.csv")
+    print(get_corr(data))
