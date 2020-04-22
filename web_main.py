@@ -1,16 +1,14 @@
-from sourceCode import test
-from sourceCode import tests
-from flask import Flask, request, render_template, redirect, Response
-from werkzeug.utils import secure_filename
-from os import path
 import io
 import os
-import re
+from os import path
+from flask import Flask, request, render_template, redirect, Response
+from werkzeug.utils import secure_filename
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import pandas as pd
 from matplotlib.figure import Figure
+from sourceCode import test
+from sourceCode import tests
 from sourceCode.func import get_corr, gethtml, whoami
-
 app = Flask(__name__)
 commandList = ['test', 'tests']
 
