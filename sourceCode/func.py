@@ -17,16 +17,6 @@ def gethtml(lst):
     return html + "</table>"
 
 
-def whoami():
-    """
-    get who am i
-    :return: last username
-    """
-    rfile = open("whoami", "r", encoding="utf-8")
-    name = rfile.readlines()[-1][:-1]
-    rfile.close()
-    return name
-
 
 def get_corr(data):
     """
