@@ -67,25 +67,25 @@ def upload():
     write the filename into ./static/username/loadfile.txt
     jump to upload page to preview data and choose method
     """
-    # try:
-    name=session["username"]
-    if not os.path.exists("./static/" + name):
-        os.mkdir("./static/" + name)
-        os.mkdir("./static/{}/uploads".format(name))
-        os.mkdir("./static/{}/downloads".format(name))
-    if request.method == 'POST':
-        f = request.files["file"]
-        base_path = path.abspath(path.dirname(__file__))
-        upload_path = path.join(base_path, 'static/{}/uploads/'.format(name))
-        file_name = upload_path + secure_filename(f.filename)
-        uploadFileName = open("./static/{}/loadfile.txt".format(name), "a", encoding="utf-8")
-        print(file_name, file=uploadFileName)
-        uploadFileName.close()
-        f.save(file_name)
-        return redirect("check")
-    return render_template('upload.html')
-    # except Exception:
-    #     return redirect("error")
+    try:
+        name=session["username"]
+        if not os.path.exists("./static/" + name):
+            os.mkdir("./static/" + name)
+            os.mkdir("./static/{}/uploads".format(name))
+            os.mkdir("./static/{}/downloads".format(name))
+        if request.method == 'POST':
+            f = request.files["file"]
+            base_path = path.abspath(path.dirname(__file__))
+            upload_path = path.join(base_path, 'static/{}/uploads/'.format(name))
+            file_name = upload_path + secure_filename(f.filename)
+            uploadFileName = open("./static/{}/loadfile.txt".format(name), "a", encoding="utf-8")
+            print(file_name, file=uploadFileName)
+            uploadFileName.close()
+            f.save(file_name)
+            return redirect("check")
+        return render_template('upload.html')
+    except Exception:
+        return redirect("error")
 
 
 @app.route("/check", methods=['GET', 'POST'])
@@ -193,13 +193,13 @@ def showplot():
     return Response(output.getvalue(), mimetype='image/png')
 
 
-@app.route("/corr.png")
-def showcorr():
+@app.route("/<int:plot>.png")
+def showcorr(plot):
     name=session["username"]
     with open("./static/{}/loadfile.txt".format(name)) as f:
         filename = f.readlines()[-1][:-1]
     data = pd.read_csv(filename)
-    tmp = data.corr()
+    title = list(data.columns)
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
     output = io.BytesIO()
