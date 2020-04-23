@@ -2,7 +2,7 @@ import io
 import os
 from os import path
 import shutil
-from flask import Flask, request, render_template, redirect, Response,make_response
+from flask import Flask, request, render_template, redirect, Response, make_response
 from werkzeug.utils import secure_filename
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import pandas as pd
@@ -10,9 +10,11 @@ from matplotlib.figure import Figure
 from sourceCode import test
 from sourceCode import tests
 from sourceCode.func import get_corr, gethtml
+
 app = Flask(__name__)
 commandList = ['test', 'tests']
-session={}
+session = {}
+
 
 @app.route("/", methods=['GET', 'POST'])
 def passwd():
@@ -33,9 +35,9 @@ def passwd():
             """if password is wrong"""
             return render_template("login.html", script="alert('Wrong Password!')")
         """if all is well"""
-        session["username"]=name
+        session["username"] = name
         if os.path.exists("./static/" + name):
-            shutil.rmtree("./static/"+name)
+            shutil.rmtree("./static/" + name)
         return redirect("data")
     except:
         """if redirected from register"""
@@ -68,7 +70,7 @@ def upload():
     jump to upload page to preview data and choose method
     """
     try:
-        name=session["username"]
+        name = session["username"]
         if not os.path.exists("./static/" + name):
             os.mkdir("./static/" + name)
             os.mkdir("./static/{}/uploads".format(name))
@@ -94,7 +96,7 @@ def checkResult():
     show about 20 lines of data
     clean data
     """
-    name=session["username"]
+    name = session["username"]
     try:
         with open("./static/{}/loadfile.txt".format(name)) as f:
             filename = f.readlines()[-1][:-1]
@@ -113,7 +115,7 @@ def showResult():
     show corr
     let user to choose command, dependent variable
     """
-    name=session["username"]
+    name = session["username"]
     try:
         nullMethod = request.form["isnull"]
         with open("./static/{}/loadfile.txt".format(name)) as f:
@@ -142,7 +144,7 @@ def showResult():
 
 @app.route("/result", methods=['GET', 'POST'])
 def show():
-    name=session["username"]
+    name = session["username"]
     """
     show the result
     """
@@ -177,12 +179,12 @@ def show():
                     <a href="./static/{}/uploads/{}>download your raw data</a>
                 </body>
                 </html>
-            """.format(gdnfile, content,name,filename)
+            """.format(gdnfile, content, name, filename)
 
 
 @app.route("/plot.png")
 def showplot():
-    name=session["username"]
+    name = session["username"]
     with open("./static/{}/var.txt".format(name)) as f:
         lst = f.readlines()[-1][:-1].split('\t')
     with open("./static/{}/commandhis.txt".format(name)) as f:
@@ -193,23 +195,9 @@ def showplot():
     return Response(output.getvalue(), mimetype='image/png')
 
 
-@app.route("/<int:plot>.png")
-def showcorr(plot):
-    name=session["username"]
-    with open("./static/{}/loadfile.txt".format(name)) as f:
-        filename = f.readlines()[-1][:-1]
-    data = pd.read_csv(filename)
-    title = list(data.columns)
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
-
-
 @app.route("/datainfo")
 def forDownloads():
-    name=session["username"]
+    name = session["username"]
     return redirect("/static/{}/downloads/ans.csv".format(name))
 
 
