@@ -7,13 +7,11 @@ from werkzeug.utils import secure_filename
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import pandas as pd
 from matplotlib.figure import Figure
-from sourceCode import test
-from sourceCode import tests
 from sourceCode import linear_reg
 from sourceCode.func import get_corr, gethtml
 
 app = Flask(__name__)
-commandList = ['test', 'tests',"linear_reg"]
+commandList = ["linear_reg"]
 session = {}
 
 
@@ -167,6 +165,7 @@ def show():
     rfile = open("./static/{}/commandhis.txt".format(name), "r", encoding="utf-8")
     content = rfile.read().replace('\n', '<br>')
     rfile.close()
+    showImge=eval(tmp + ".create_t_figure('{}',{},'{}')".format(dependentVariable, independentVariable, name))
     return """<html>
                 <head>
                     <title>ans</title>
@@ -174,7 +173,7 @@ def show():
                 <body>
                     <h1>datainfo</h1>
                     <p>{}</p>
-                    <img src="/plot.png"><br>
+                    <img src="{}"><br>
                     <a href="/datainfo">Click to Download the Result</a>
                     <h2>command history</h2>
                     <p>{}</p>
@@ -182,7 +181,7 @@ def show():
                     <a href="./static/{}/uploads/{}>download your raw data</a>
                 </body>
                 </html>
-            """.format(gdnfile, content, name, filename)
+            """.format(gdnfile,showImge ,content, name, filename)
 
 
 @app.route("/plot.png")
@@ -192,7 +191,7 @@ def showplot():
         lst = f.readlines()[-1][:-1].split('\t')
     with open("./static/{}/commandhis.txt".format(name)) as f:
         command = f.readlines()[-1][:-1]
-        fig = eval(command + ".create_figure('{}',{},'{}')".format(lst[0], lst[1], name))
+        fig = eval(command + ".create_t_figure('{}',{},'{}')".format(lst[0], lst[1], name))
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
