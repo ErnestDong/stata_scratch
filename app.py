@@ -9,10 +9,11 @@ import pandas as pd
 from matplotlib.figure import Figure
 from sourceCode import test
 from sourceCode import tests
+from sourceCode import linear_reg
 from sourceCode.func import get_corr, gethtml
 
 app = Flask(__name__)
-commandList = ['test', 'tests']
+commandList = ['test', 'tests',"linear_reg"]
 session = {}
 
 
@@ -138,6 +139,8 @@ def showResult():
         for i in title:
             commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(i, i)
         return render_template("clean.html", command=commandStr)
+    except ValueError:
+        return redirect("VE")
     except Exception:
         return redirect("error")
 
@@ -219,7 +222,24 @@ def cerr():
         </html>
     """
     return html
-
+@app.route("/VE")
+def valerr():
+    html = """
+        <!DOCTYPE html>
+        <html lang="zh">
+          <head>
+            <meta charset="UTF-8" />
+            <title>Title</title>
+          </head>
+          <body>
+          <script>
+          alert("Is it dummy?")
+          </script>
+            <a href="/check">return to check page</a>
+          </body>
+        </html>
+    """
+    return html
 
 if __name__ == "__main__":
     app.run(thread=True)
