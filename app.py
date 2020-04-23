@@ -1,19 +1,18 @@
-from sourceCode import test
-from sourceCode import tests
-from flask import Flask, request, render_template, redirect, Response
-from werkzeug.utils import secure_filename
-from os import path
 import io
 import os
-import re
+from os import path
+import shutil
+from flask import Flask, request, render_template, redirect, Response,make_response
+from werkzeug.utils import secure_filename
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import pandas as pd
 from matplotlib.figure import Figure
-from sourceCode.func import get_corr, gethtml, whoami
-
+from sourceCode import test
+from sourceCode import tests
+from sourceCode.func import get_corr, gethtml
 app = Flask(__name__)
 commandList = ['test', 'tests']
-
+session={}
 
 @app.route("/", methods=['GET', 'POST'])
 def passwd():
@@ -24,7 +23,7 @@ def passwd():
         """if redirected from /"""
         name = request.form["username"]
         passwd = request.form["passwd"]
-        passwd_file = open(".\\passwd", "r", encoding='utf-8')
+        passwd_file = open("./passwd", "r", encoding='utf-8')
         data = eval(passwd_file.read())
         passwd_file.close()
         if name not in data:
@@ -34,16 +33,16 @@ def passwd():
             """if password is wrong"""
             return render_template("login.html", script="alert('Wrong Password!')")
         """if all is well"""
-        tmp = open("whoami", "a", encoding="utf-8")
-        print(name, file=tmp)
-        tmp.close()
+        session["username"]=name
+        if os.path.exists("./static/" + name):
+            shutil.rmtree("./static/"+name)
         return redirect("data")
     except:
         """if redirected from register"""
         try:
             name = request.form["addUser"]
             passwd = request.form["addpwd"]
-            passwd_file = open(".\\passwd", "r", encoding='utf-8')
+            passwd_file = open("./passwd", "r", encoding='utf-8')
             data = eval(passwd_file.read())
             # print(type(data))
             passwd_file.close()
@@ -52,13 +51,13 @@ def passwd():
                 """if username exists"""
                 return render_template("login.html", script="alert('name is registered!Try another name.')")
             data[name] = passwd
-            passwd_file = open(".\\passwd", "w", encoding='utf-8')
+            passwd_file = open("./passwd", "w", encoding='utf-8')
             print(data, file=passwd_file)
             passwd_file.close()
             return render_template("login.html", script="alert('registered!')")
         except:
             """if user just clicks the button"""
-            return render_template("login.html", scipt="")
+            return render_template("login.html", scipt="alert('Input')")
 
 
 @app.route("/data", methods=['GET', 'POST'])
@@ -68,27 +67,25 @@ def upload():
     write the filename into ./static/username/loadfile.txt
     jump to upload page to preview data and choose method
     """
-    try:
-        tmp = open("whoami", "r", encoding="utf-8")
-        name = tmp.readlines()[-1][:-1]
-        tmp.close()
-        if not os.path.exists("./static/" + name):
-            os.mkdir(".\\static\\" + name)
-            os.mkdir(".\\static\\{}\\uploads".format(name))
-            os.mkdir(".\\static\\{}\\downloads".format(name))
-        if request.method == 'POST':
-            f = request.files["file"]
-            base_path = path.abspath(path.dirname(__file__))
-            upload_path = path.join(base_path, 'static\\{}\\uploads\\'.format(name))
-            file_name = upload_path + secure_filename(f.filename)
-            uploadFileName = open(".\\static\\{}\\loadfile.txt".format(name), "a", encoding="utf-8")
-            print(file_name, file=uploadFileName)
-            uploadFileName.close()
-            f.save(file_name)
-            return redirect("check")
-        return render_template('upload.html')
-    except Exception:
-        return redirect("error")
+    # try:
+    name=session["username"]
+    if not os.path.exists("./static/" + name):
+        os.mkdir("./static/" + name)
+        os.mkdir("./static/{}/uploads".format(name))
+        os.mkdir("./static/{}/downloads".format(name))
+    if request.method == 'POST':
+        f = request.files["file"]
+        base_path = path.abspath(path.dirname(__file__))
+        upload_path = path.join(base_path, 'static/{}/uploads/'.format(name))
+        file_name = upload_path + secure_filename(f.filename)
+        uploadFileName = open("./static/{}/loadfile.txt".format(name), "a", encoding="utf-8")
+        print(file_name, file=uploadFileName)
+        uploadFileName.close()
+        f.save(file_name)
+        return redirect("check")
+    return render_template('upload.html')
+    # except Exception:
+    #     return redirect("error")
 
 
 @app.route("/check", methods=['GET', 'POST'])
@@ -97,9 +94,9 @@ def checkResult():
     show about 20 lines of data
     clean data
     """
-    name = whoami()
+    name=session["username"]
     try:
-        with open(".\\static\\{}\\loadfile.txt".format(name)) as f:
+        with open("./static/{}/loadfile.txt".format(name)) as f:
             filename = f.readlines()[-1][:-1]
         uploadFile = open(filename, "r", encoding="utf-8")
         fileinfo = uploadFile.readlines()[:20]
@@ -116,10 +113,10 @@ def showResult():
     show corr
     let user to choose command, dependent variable
     """
-    name = whoami()
+    name=session["username"]
     try:
         nullMethod = request.form["isnull"]
-        with open(".\\static\\{}\\loadfile.txt".format(name)) as f:
+        with open("./static/{}/loadfile.txt".format(name)) as f:
             filename = f.readlines()[-1][:-1]
         data = pd.read_csv(filename)
         if nullMethod[0] == "d":
@@ -145,24 +142,24 @@ def showResult():
 
 @app.route("/result", methods=['GET', 'POST'])
 def show():
-    name = whoami()
+    name=session["username"]
     """
     show the result
     """
-    with open(".\\static\\{}\\loadfile.txt".format(name)) as f:
+    with open("./static/{}/loadfile.txt".format(name)) as f:
         filename = f.readlines()[-1][:-1]
-    wfile = open(".\\static\\{}\\commandhis.txt".format(name), "a", encoding="utf-8")
+    wfile = open("./static/{}/commandhis.txt".format(name), "a", encoding="utf-8")
     tmp = request.form["command"]
     dependentVariable = request.form["dependent"]
     independentVariable = request.form.getlist("independent")
     independentVariable[-1] = independentVariable[-1]
-    varFiles = open(".\\static\\{}\\var.txt".format(name), "a", encoding="utf-8")
+    varFiles = open("./static/{}/var.txt".format(name), "a", encoding="utf-8")
     print(dependentVariable, '\t', independentVariable, file=varFiles)
     varFiles.close()
     gdnfile = eval(tmp + ".showAns('{}',{},'{}')".format(dependentVariable, independentVariable, name))
     print(tmp, file=wfile)
     wfile.close()
-    rfile = open(".\\static\\{}\\commandhis.txt".format(name), "r", encoding="utf-8")
+    rfile = open("./static/{}/commandhis.txt".format(name), "r", encoding="utf-8")
     content = rfile.read().replace('\n', '<br>')
     rfile.close()
     return """<html>
@@ -185,10 +182,10 @@ def show():
 
 @app.route("/plot.png")
 def showplot():
-    name = whoami()
-    with open(".\\static\\{}\\var.txt".format(name)) as f:
+    name=session["username"]
+    with open("./static/{}/var.txt".format(name)) as f:
         lst = f.readlines()[-1][:-1].split('\t')
-    with open(".\\static\\{}\\commandhis.txt".format(name)) as f:
+    with open("./static/{}/commandhis.txt".format(name)) as f:
         command = f.readlines()[-1][:-1]
         fig = eval(command + ".create_figure('{}',{},'{}')".format(lst[0], lst[1], name))
         output = io.BytesIO()
@@ -198,8 +195,8 @@ def showplot():
 
 @app.route("/corr.png")
 def showcorr():
-    name = whoami()
-    with open(".\\static\\{}\\loadfile.txt".format(name)) as f:
+    name=session["username"]
+    with open("./static/{}/loadfile.txt".format(name)) as f:
         filename = f.readlines()[-1][:-1]
     data = pd.read_csv(filename)
     tmp = data.corr()
@@ -212,8 +209,8 @@ def showcorr():
 
 @app.route("/datainfo")
 def forDownloads():
-    name = whoami()
-    return redirect("\\static\\{}\\downloads\\ans.csv".format(name))
+    name=session["username"]
+    return redirect("/static/{}/downloads/ans.csv".format(name))
 
 
 @app.route("/error")
@@ -237,4 +234,4 @@ def cerr():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(thread=True)
