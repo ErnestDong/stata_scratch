@@ -1,9 +1,6 @@
 from sklearn.linear_model import LinearRegression
-from matplotlib.figure import Figure
-import random
 import pandas as pd
 import numpy as np
-from sympy import stats
 import scipy
 import matplotlib.pyplot as plt
 import base64
@@ -26,7 +23,10 @@ def getAns(dependent="", independent=[], username=""):
     ans["coefficient"] = np.append(reg.intercept_, reg.coef_).tolist()
     ans["R-squared"] = reg.score(xs, ys)
     ans["Adjusted R-squared"] = 1 - (1 - ans["R-squared"]) * (n - 1) / (n - k)
-    ans["F-value"] = ans["R-squared"] / (1 - ans["R-squared"]) * (n - k) / (k - 1)
+    try:
+        ans["F-value"] = ans["R-squared"] / (1 - ans["R-squared"]) * (n - k) / (k - 1)
+    except ZeroDivisionError:
+        ans["F-value"]=9999999999999999
     ans["SS"] = {}
     prediction = reg.predict(xs)
     # print(sum(prediction**2)/sum(ys**2))
@@ -43,7 +43,10 @@ def getAns(dependent="", independent=[], username=""):
     tmp = np.dot(xs.T, xs)
     var_cov_beta = sigma_square * np.linalg.inv(tmp)
     ans["stderr"] = np.sqrt(var_cov_beta.diagonal()).tolist()
-    ans["t"] = [ans["coefficient"][i] / ans["stderr"][i] for i in range(k)]
+    try:
+        ans["t"] = [ans["coefficient"][i] / ans["stderr"][i] for i in range(k)]
+    except ZeroDivisionError:
+        ans["t"] = 9999999
     ans["P>|t|"] = [scipy.stats.t.sf(i, n - k) for i in ans["t"]]
     return ans
 
@@ -52,9 +55,8 @@ def format_(x):
     return str(x).rjust(10, ' ')
 
 
-def showAns(dependent="", independent=[], username=""):
+def showAns(dependent="", ans={}, username=""):
     """turn to html pages"""
-    ans = getAns(dependent, independent, username)
     csvfile=open("./static/{}/downloads/ans.csv".format(username),"w",encoding="utf-8")
     print("dependent variable: ", dependent, file=csvfile)
     print("variables,Coefficients,Standard Errors,t values,Probabilities",file=csvfile)
@@ -157,8 +159,49 @@ def showAns(dependent="", independent=[], username=""):
     return html + "</table>"
 
 
-def create_t_figure(dependent="", independent=[], username=""):
-    ans=getAns(dependent,independent,username)
+def create_b_figure(ans={}):
+    args=ans["var"][1:]
+    bvalue=ans["coefficient"]
+    plt.bar(args, bvalue)
+    for a, b in zip(args, bvalue):
+        plt.text(a, b+0.003, '%.3f' % b, ha='center',va='bottom',fontsize=11)
+    plt.xlabel('variables')
+    plt.ylabel('b-value')
+    plt.ylim(min(0,min(bvalue)*1.2), max(0,max(bvalue)*1.2))
+    plt.rcParams['figure.figsize'] = (8.0, 4.0)
+    plt.title="b value"
+    buffer = BytesIO()
+    plt.savefig(buffer)
+    plot_data = buffer.getvalue()
+    imb = base64.b64encode(plot_data)
+    ims = imb.decode()
+    imd = "data:image/png;base64," + ims
+    plt.clf()
+    return imd
+def create_p_figure(ans={}):
+    args=ans["var"][1:]
+    pvalue=ans["P>|t|"]
+    plt.bar(args, pvalue)
+    for a, b in zip(args, pvalue):
+        plt.text(a, b+0.003, '%.3f' % b, ha='center',va='bottom',fontsize=11)
+    plt.xlabel('variables')
+    plt.ylabel('p-value')
+    plt.ylim(min(0,min(pvalue)*1.2), max(0,max(pvalue)*1.2))
+    plt.axhline(y=0.01,ls="-",c="violet",label="1%")
+    plt.axhline(y=0.05,ls="-",c="mediumpurple",label="5%")
+    plt.axhline(y=0.1,ls="-",c="cornflowerblue",label="10%")
+    plt.rcParams['figure.figsize'] = (8.0, 4.0)
+    plt.title="p value"
+    plt.legend()
+    buffer = BytesIO()
+    plt.savefig(buffer)
+    plot_data = buffer.getvalue()
+    imb = base64.b64encode(plot_data)
+    ims = imb.decode()
+    imd = "data:image/png;base64," + ims
+    plt.clf()
+    return imd
+def create_t_figure(ans={}):
     n=ans["observation"]
     args=ans["var"][1:]
     k=ans["df"]
@@ -166,35 +209,31 @@ def create_t_figure(dependent="", independent=[], username=""):
     t_1=scipy.stats.t.ppf(0.995,n-k)
     t_5=scipy.stats.t.ppf(0.975,n-k)
     t_10=scipy.stats.t.ppf(0.95,n-k)
-    x = np.linspace(scipy.stats.t.ppf(0.01, n-k),scipy.stats.t.ppf(0.99, n-k), 100)
-    plt.plot(x, scipy.stats.t.pdf(x, n-k),'r-', lw = 5, alpha = 0.6, label = 't pdf')
-    for i in range(k):
-        plt.plot([tvalue[i]]*10,list(i/100 for i in range(10)),label=args[i])
-    tmp=[t_1,t_5,t_10]
-    for i in range(3):
-        plt.plot([tmp[i]]*10,list(i/100 for i in range(10)),label=["1%","5%","10%"][i])
-    # X = np.linspace(-np.pi, np.pi, 256, endpoint=True)  # -π to+π的256个值
-    # C, S = np.cos(X), np.sin(X)
-    plt.rcParams['figure.figsize'] = (8.0, 4.0)  # 设置figure_size尺寸800x400
-    # plt.plot(X, C)
-    # plt.plot(X, S)
+    plt.bar(args, tvalue)
+    for a, b in zip(args, tvalue):
+        plt.text(a, b+0.003, '%.3f' % b, ha='center',va='bottom',fontsize=11)
+    plt.xlabel('variables')
+    plt.ylabel('t-value')
+    plt.ylim(min(0,min(tvalue)*1.2), max(0,max(tvalue)*1.2))
+    plt.axhline(y=t_1,ls="-",c="violet",label="1%")
+    plt.axhline(y=t_5,ls="-",c="mediumpurple",label="5%")
+    plt.axhline(y=t_10,ls="-",c="cornflowerblue",label="10%")
+    plt.rcParams['figure.figsize'] = (8.0, 4.0)
     plt.title="t value"
     plt.legend()
     buffer = BytesIO()
     plt.savefig(buffer)
     plot_data = buffer.getvalue()
-    # 将matplotlib图片转换为HTML
-    imb = base64.b64encode(plot_data)  # 对plot_data进行编码
+    imb = base64.b64encode(plot_data)
     ims = imb.decode()
     imd = "data:image/png;base64," + ims
+    plt.clf()
     return imd
-
-
 if __name__ == "__main__":
     # a=np.array([[1,2],[3,4]])
     # b=np.linalg.inv(a)
     # print(np.dot(a,b))
-    print(showAns("open", ["amount", "low"], "dcy"))
+    print(getAns("open", ["amount", "low"], "dcy"))
     # getAns("open", ["amount", "low"], "dcy")
     # data=pd.read_csv("./sourceCode/tk/daily_Ashare.csv")
     # reg('open',['high','low'],'dcy',data)

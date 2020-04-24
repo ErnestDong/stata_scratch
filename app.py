@@ -145,6 +145,7 @@ def showResult():
 
 @app.route("/result", methods=['GET', 'POST'])
 def show():
+    """TODO: if it's dummy but user uses linear_reg"""
     name = session["username"]
     """
     show the result
@@ -159,13 +160,16 @@ def show():
     varFiles = open("./static/{}/var.txt".format(name), "a", encoding="utf-8")
     print(dependentVariable, '\t', independentVariable, file=varFiles)
     varFiles.close()
-    gdnfile = eval(tmp + ".showAns('{}',{},'{}')".format(dependentVariable, independentVariable, name))
+    ans = eval(tmp + ".getAns('{}',{},'{}')".format(dependentVariable, independentVariable, name))
+    gdnfile = eval(tmp + ".showAns('{}',{},'{}')".format(dependentVariable, ans, name))
     print(tmp, file=wfile)
     wfile.close()
     rfile = open("./static/{}/commandhis.txt".format(name), "r", encoding="utf-8")
     content = rfile.read().replace('\n', '<br>')
     rfile.close()
-    showImge=eval(tmp + ".create_t_figure('{}',{},'{}')".format(dependentVariable, independentVariable, name))
+    tfigure=eval(tmp + ".create_t_figure({})".format(ans))
+    bfigure = eval(tmp + ".create_b_figure({})".format(ans))
+    pfigure = eval(tmp + ".create_p_figure({})".format(ans))
     return """<html>
                 <head>
                     <title>ans</title>
@@ -174,6 +178,8 @@ def show():
                     <h1>datainfo</h1>
                     <p>{}</p>
                     <img src="{}"><br>
+                    <img src="{}"><br>
+                    <img src="{}"><br>
                     <a href="/datainfo">Click to Download the Result</a>
                     <h2>command history</h2>
                     <p>{}</p>
@@ -181,21 +187,7 @@ def show():
                     <a href="./static/{}/uploads/{}>download your raw data</a>
                 </body>
                 </html>
-            """.format(gdnfile,showImge ,content, name, filename)
-
-
-@app.route("/plot.png")
-def showplot():
-    name = session["username"]
-    with open("./static/{}/var.txt".format(name)) as f:
-        lst = f.readlines()[-1][:-1].split('\t')
-    with open("./static/{}/commandhis.txt".format(name)) as f:
-        command = f.readlines()[-1][:-1]
-        fig = eval(command + ".create_t_figure('{}',{},'{}')".format(lst[0], lst[1], name))
-        output = io.BytesIO()
-        FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
-
+            """.format(gdnfile,tfigure,bfigure,pfigure ,content, name, filename)
 
 @app.route("/datainfo")
 def forDownloads():
