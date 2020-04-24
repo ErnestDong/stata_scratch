@@ -1,12 +1,10 @@
-import io
 import os
 from os import path
 import shutil
-from flask import Flask, request, render_template, redirect, Response, make_response
+import pickle
+from flask import Flask, request, render_template, redirect
 from werkzeug.utils import secure_filename
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import pandas as pd
-from matplotlib.figure import Figure
 from sourceCode import linear_reg
 from sourceCode.func import get_corr, gethtml
 
@@ -24,9 +22,13 @@ def passwd():
         """if redirected from /"""
         name = request.form["username"]
         passwd = request.form["passwd"]
-        passwd_file = open("./passwd", "r", encoding='utf-8')
-        data = eval(passwd_file.read())
-        passwd_file.close()
+        try:
+            with open("users_info.pickle", "rb") as f:
+                data = pickle.load(f)
+        except FileNotFoundError:
+            with open("users_info.pickle", "wb") as f:
+                data = {'admin': 'admin'}
+                pickle.dump(data, f)
         if name not in data:
             """if not registered"""
             return render_template("login.html", script="alert('Not Registered!')")
@@ -43,18 +45,14 @@ def passwd():
         try:
             name = request.form["addUser"]
             passwd = request.form["addpwd"]
-            passwd_file = open("./passwd", "r", encoding='utf-8')
-            data = eval(passwd_file.read())
-            # print(type(data))
-            passwd_file.close()
-            # print(type(name))
+            with open("users_info.pickle", "rb") as f:
+                data = pickle.load(f)
             if name in data:
                 """if username exists"""
                 return render_template("login.html", script="alert('name is registered!Try another name.')")
             data[name] = passwd
-            passwd_file = open("./passwd", "w", encoding='utf-8')
-            print(data, file=passwd_file)
-            passwd_file.close()
+            with open("users_info.pickle", "wb") as f:
+                pickle.dump(data, f)
             return render_template("login.html", script="alert('registered!')")
         except:
             """if user just clicks the button"""
@@ -95,8 +93,8 @@ def checkResult():
     show about 20 lines of data
     clean data
     """
-    name = session["username"]
     try:
+        name = session["username"]
         with open("./static/{}/loadfile.txt".format(name)) as f:
             filename = f.readlines()[-1][:-1]
         uploadFile = open(filename, "r", encoding="utf-8")
@@ -114,8 +112,8 @@ def showResult():
     show corr
     let user to choose command, dependent variable
     """
-    name = session["username"]
     try:
+        name = session["username"]
         nullMethod = request.form["isnull"]
         with open("./static/{}/loadfile.txt".format(name)) as f:
             filename = f.readlines()[-1][:-1]
@@ -146,10 +144,10 @@ def showResult():
 @app.route("/result", methods=['GET', 'POST'])
 def show():
     """TODO: if it's dummy but user uses linear_reg"""
-    name = session["username"]
     """
     show the result
     """
+    name = session["username"]
     with open("./static/{}/loadfile.txt".format(name)) as f:
         filename = f.readlines()[-1][:-1]
     wfile = open("./static/{}/commandhis.txt".format(name), "a", encoding="utf-8")
@@ -167,7 +165,7 @@ def show():
     rfile = open("./static/{}/commandhis.txt".format(name), "r", encoding="utf-8")
     content = rfile.read().replace('\n', '<br>')
     rfile.close()
-    tfigure=eval(tmp + ".create_t_figure({})".format(ans))
+    tfigure = eval(tmp + ".create_t_figure({})".format(ans))
     bfigure = eval(tmp + ".create_b_figure({})".format(ans))
     pfigure = eval(tmp + ".create_p_figure({})".format(ans))
     return """<html>
@@ -187,7 +185,8 @@ def show():
                     <a href="./static/{}/uploads/{}>download your raw data</a>
                 </body>
                 </html>
-            """.format(gdnfile,tfigure,bfigure,pfigure ,content, name, filename)
+            """.format(gdnfile, tfigure, bfigure, pfigure, content, name, filename)
+
 
 @app.route("/datainfo")
 def forDownloads():
@@ -213,6 +212,8 @@ def cerr():
         </html>
     """
     return html
+
+
 @app.route("/VE")
 def valerr():
     html = """
@@ -231,6 +232,7 @@ def valerr():
         </html>
     """
     return html
+
 
 if __name__ == "__main__":
     app.run(thread=True)

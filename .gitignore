@@ -3,15 +3,8 @@ test
 .idea/
 .mypy_cache/
 sourceCode/__pycache__/
-static/downloads/ans.csv
-flaskPart.py
+test.py
 ./static/dcy
 __pycache__
-sourceCode/PlotResult.py
-sourceCode/TestData.py
-sourceCode/CleanData.py
-sourceCode/summary.py
-sourceCode/daily_Ashare.csv
 sourceCode/tk
 static/dcy
-static/1111
