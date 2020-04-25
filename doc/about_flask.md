@@ -6,12 +6,7 @@
 
 ## 提交数据
 
-用户在/data目录提交csv文件，csv文件存放于/static/username/upload/，并有一系列的文件支持后续操作，其中
-
-1. loadfile.txt：用户上传的文件列表
-2. commandhis.txt：用户的命令历史
-3. whoami：当前用户名
-4. var.txt：用户选择的因变量（str格式）与自变量（list(*str))的格式
+用户在/data目录提交csv文件，csv文件存放于/static/username/upload/
 
 之后跳转到/check目录，清洗数据并查看前20行
 
@@ -21,4 +16,4 @@
 
 ## 结果展示
 
-/result获得数据分析结果与图片，并可下载相应数据。
+/result获得数据分析结果与图片，并可下载相应数据，或再次进行分析。

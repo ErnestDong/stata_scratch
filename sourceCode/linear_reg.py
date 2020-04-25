@@ -6,12 +6,10 @@ import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 
-def getAns(dependent="", independent=[], username=""):
+def getAns(dependent="", independent=[], session={}):
     """get p-value, f-value, R-square etc."""
     reg = LinearRegression()
-    tmp = open("./static/{}/loadfile.txt".format(username), "r", encoding="utf-8")
-    filename = tmp.readlines()[-1][:-1]
-    tmp.close()
+    filename=session["filename"]
     data = pd.read_csv(filename)
     ys = data[dependent].values
     xs = data[independent].values
@@ -55,8 +53,9 @@ def format_(x):
     return str(x).rjust(10, ' ')
 
 
-def showAns(dependent="", ans={}, username=""):
+def showAns(dependent="", ans={}, session={}):
     """turn to html pages"""
+    username=session["username"]
     csvfile=open("./static/{}/downloads/ans.csv".format(username),"w",encoding="utf-8")
     print("dependent variable: ", dependent, file=csvfile)
     print("variables,Coefficients,Standard Errors,t values,Probabilities",file=csvfile)
