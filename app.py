@@ -117,7 +117,7 @@ def showResult():
         # name = session["username"]
         nullMethod = request.form["isnull"]
         filename=session["filename"]
-        session["command"].append(nullMethod)
+        # session["command"].append(nullMethod)
         data = pd.read_csv(filename)
         if nullMethod[0] == "d":
             data = data.dropna()
@@ -135,6 +135,7 @@ def showResult():
         commandStr += "<br><h2>please choose your independent variable(s)</h2>"
         for i in title:
             commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(i, i)
+        commandStr+="<a href=./browse target=\"_blank\">view data</a>"
         return render_template("clean.html", command=commandStr)
     except ValueError:
         return redirect("VE")
@@ -144,7 +145,6 @@ def showResult():
 
 @app.route("/result", methods=['GET', 'POST'])
 def show():
-    """TODO: if it's dummy but user uses linear_reg"""
     """
     show the result
     """
@@ -158,8 +158,8 @@ def show():
     independentVariable[-1] = independentVariable[-1]
     ans = eval(tmp + ".getAns('{}',{},{})".format(dependentVariable, independentVariable, session))
     gdnfile = eval(tmp + ".showAns('{}',{},{})".format(dependentVariable, ans, session))
-    session["command"].append(tmp)
-    content="<br>".join(session["command"])
+    # session["command"].append(tmp)
+    content="<br>"#.join(session["command"])
     tfigure = eval(tmp + ".create_t_figure({})".format(ans))
     bfigure = eval(tmp + ".create_b_figure({})".format(ans))
     pfigure = eval(tmp + ".create_p_figure({})".format(ans))
@@ -191,7 +191,8 @@ def show():
                     <p>{}</p>-->
                     <a href="/check">preview again</a>
                     <a href="./static/{}/uploads/{}">download your raw data</a>
-                    {}
+                    {}<br>
+                    <a href="./browse" target="_blank">view data</a>
                 </body>
                 </html>
             """.format(gdnfile, tfigure, bfigure, pfigure, content, name, filename,commandStr)
@@ -241,6 +242,25 @@ def valerr():
         </html>
     """
     return html
+@app.route("/browse")
+def data_broser():
+    filename=session["filename"]
+    uploadFile = open(filename, "r", encoding="utf-8")
+    fileinfo = uploadFile.readlines()
+    fileinfo = gethtml(fileinfo)
+    uploadFile.close()
+    return """
+        <!DOCTYPE html>
+        <html lang="zh">
+          <head>
+            <meta charset="UTF-8" />
+            <title>Title</title>
+          </head>
+          <body>
+            {}
+          </body>
+        </html>
+    """.format(fileinfo)
 
 
 if __name__ == "__main__":
