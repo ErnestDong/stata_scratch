@@ -6,10 +6,13 @@ from flask import Flask, request, render_template, redirect
 from werkzeug.utils import secure_filename
 import pandas as pd
 from sourceCode import linear_reg
+from sourceCode import exp_reg_model
+from sourceCode import log_lin_model
+from sourceCode import lin_log_model
 from sourceCode.func import get_corr, gethtml
 
 app = Flask(__name__)
-commandList = ["linear_reg"]
+commandList = ["linear_reg","exp_reg_model","log_lin_model","lin_log_model"]
 session = {}
 
 
@@ -93,7 +96,7 @@ def checkResult():
     clean data
     """
     # try:
-    name = session["username"]
+    # name = session["username"]
     filename=session["filename"]
     uploadFile = open(filename, "r", encoding="utf-8")
     fileinfo = uploadFile.readlines()[:20]
@@ -111,7 +114,7 @@ def showResult():
     let user to choose command, dependent variable
     """
     try:
-        name = session["username"]
+        # name = session["username"]
         nullMethod = request.form["isnull"]
         filename=session["filename"]
         session["command"].append(nullMethod)
@@ -184,8 +187,8 @@ def show():
                     <img src="{}"><br>
                     <img src="{}"><br>
                     <a href="/datainfo">Click to Download the Result</a>
-                    <h2>command history</h2>
-                    <p>{}</p>
+                    <!--<h2>command history</h2>
+                    <p>{}</p>-->
                     <a href="/check">preview again</a>
                     <a href="./static/{}/uploads/{}">download your raw data</a>
                     {}
