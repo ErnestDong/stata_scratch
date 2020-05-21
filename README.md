@@ -1,3 +1,7 @@
-# Stata by Python
+# flask part
 
-flask.py 文件利用 flask 框架搭建了一个网页，计划网页的根目录作为首页传递用户上传的文件，/result 返回试验结果,/error 错误处理
+![logo](./static/logo.png)
+
+通过flask展示出来。
+
+**Note** 可以在Linux(测试使用的发行版为Arch)与macOS下直接使用
