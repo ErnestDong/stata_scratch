@@ -9,6 +9,9 @@ from sourceCode import linear_reg
 from sourceCode import exp_reg_model
 from sourceCode import log_lin_model
 from sourceCode import lin_log_model
+from sourceCode.Colinearity import auxiliary_regression
+from sourceCode.Hausman import hausmantest
+from sourceCode.White import whitetest
 from sourceCode.func import get_corr, gethtml
 
 app = Flask(__name__)
@@ -183,7 +186,7 @@ def show():
                     <title>ans</title>
                 </head>
                 <body>
-                <a href="/classic" target="_blank">Click to Download the Result</a>
+                <a href="/classic" target="_blank">test hypothesis</a>
                     <h1>datainfo</h1>
                     <p>{}</p>
                     <a href="/datainfo">Click to Download the Result</a>
@@ -199,7 +202,19 @@ def show():
 
 @app.route("/classic")
 def testClassic():
-    pass
+    html = """
+            <!DOCTYPE html>
+            <html lang="zh">
+              <head>
+                <meta charset="UTF-8" />
+                <title>Test Hypothesis</title>
+              </head>
+              <body>
+                {}{}{}
+              </body>
+            </html>
+        """.format(auxiliary_regression(session),whitetest(session),hausmantest(session))
+    return html
 
 @app.route("/datainfo")
 def forDownloads():

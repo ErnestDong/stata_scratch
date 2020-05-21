@@ -10,7 +10,7 @@ def auxiliary_regression(session: dict):
     independent = session["independent"]
     observation = len(data)
     X = list(independent)
-    if len(X) <= 2:
+    if len(X) <= 1:
         return """<p>two variables won't be colinear</p>"""
     f_1 = scipy.stats.f.ppf(0.99, len(X) - 1, observation - len(X))
     f_5 = scipy.stats.f.ppf(0.95, len(X) - 1, observation - len(X))
