@@ -1,4 +1,8 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from io import BytesIO
+import base64
 def gethtml(lst):
     lenth = len(lst)
     html = "<table border='1'><tr>"
@@ -32,16 +36,26 @@ def get_corr(data):
     for i in range(length):
         lst[i].insert(0,name[i])
     lst.insert(0,["corr"]+name)
-    ans="<table border=\"1\">"
-    for i in lst:
-        ans+="<tr>"
-        for j in i:
-            if j not in name:
-                ans+="<td bgcolor='#{}'>{}</td>".format(colorize(j),str(j)[:4])
-            else:
-                ans+="<td bgcolor='#{}'>{}</td>".format(colorize(j),str(j))
-        ans+="</tr>"
-    return ans+"</table>"
+    # ans="<table border=\"1\">"
+    a = data.corr()
+    plt.subplots(figsize=(9, 9))
+    sns.heatmap(a, annot=True, vmax=1, square=True, cmap="Blues")
+    buffer = BytesIO()
+    plt.savefig(buffer)
+    plot_data = buffer.getvalue()
+    imb = base64.b64encode(plot_data)
+    ims = imb.decode()
+    imd = "data:image/png;base64," + ims
+    plt.clf()
+    # for i in lst:
+    #     ans+="<tr>"
+    #     for j in i:
+    #         if j not in name:
+    #             ans+="<td bgcolor='#{}'>{}</td>".format(colorize(j),str(j)[:4])
+    #         else:
+    #             ans+="<td bgcolor='#{}'>{}</td>".format(colorize(j),str(j))
+    #     ans+="</tr>"
+    return "<img src=\"{}\"><br>".format(imd) # ans+"</table>"
 
 def colorize(corr):
     if isinstance(corr,str):
