@@ -176,11 +176,13 @@ def show():
     for i in title:
         commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(i, i)
     commandStr += "<input type=\"submit\"/></form>"
+    session["ans"]=ans
     return """<html>
                 <head>
                     <title>ans</title>
                 </head>
                 <body>
+                <a href="/classic" target="_blank">Click to Download the Result</a>
                     <h1>datainfo</h1>
                     <p>{}</p>
                     <a href="/datainfo">Click to Download the Result</a>
@@ -194,6 +196,9 @@ def show():
                 </html>
             """.format(gdnfile, img, content, name, filename, commandStr)
 
+@app.route("/classic")
+def testClassic():
+    pass
 
 @app.route("/datainfo")
 def forDownloads():
