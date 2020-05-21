@@ -160,10 +160,7 @@ def show():
     gdnfile = eval(tmp + ".showAns('{}',{},{})".format(dependentVariable, ans, session))
     # session["command"].append(tmp)
     content = "<br>"  # .join(session["command"])
-    tfigure = eval(tmp + ".create_t_figure({})".format(ans))
-    bfigure = eval(tmp + ".create_b_figure({})".format(ans))
-    pfigure = eval(tmp + ".create_p_figure({})".format(ans))
-    del ans
+    figure = eval(tmp + ".showFigure({})".format(ans))
     data = pd.read_csv(filename)
     commandStr = "<form action=\"/result\" method=\"post\"><h2>please choose your command</h2>"
     title = list(data.columns)[1:]
@@ -183,25 +180,25 @@ def show():
                 <body>
                     <h1>datainfo</h1>
                     <p>{}</p>
-                    <img src="{}"><br>
-                    <img src="{}"><br>
-                    <img src="{}"><br>
                     <a href="/datainfo">Click to Download the Result</a>
-                    <!--<h2>command history</h2>
-                    <p>{}</p>-->
+                    {}
+                    {}
                     <a href="/check">preview again</a>
                     <a href="./static/{}/uploads/{}">download your raw data</a>
                     {}<br>
                     <a href="./browse" target="_blank">view data</a>
                 </body>
                 </html>
-            """.format(gdnfile, tfigure, bfigure, pfigure, content, name, filename, commandStr)
+            """.format(gdnfile,figure , content, name, filename, commandStr)
 
 
 @app.route("/datainfo")
 def forDownloads():
-    name = session["username"]
-    return redirect("/static/{}/downloads/ans.csv".format(name))
+    try:
+        name = session["username"]
+        return redirect("/static/{}/downloads/ans.csv".format(name))
+    except:
+        return """Check Your Data"""
 
 
 @app.route("/error")
