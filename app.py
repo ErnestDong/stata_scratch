@@ -161,6 +161,9 @@ def show():
     # session["command"].append(tmp)
     content = "<br>"  # .join(session["command"])
     figure = eval(tmp + ".showFigure({})".format(ans))
+    img=""
+    for i in figure:
+        img+="<h3>t-value</h3><img src=\"{}\"/><br".format(i,figure[i])
     data = pd.read_csv(filename)
     commandStr = "<form action=\"/result\" method=\"post\"><h2>please choose your command</h2>"
     title = list(data.columns)[1:]
@@ -189,7 +192,7 @@ def show():
                     <a href="./browse" target="_blank">view data</a>
                 </body>
                 </html>
-            """.format(gdnfile, figure, content, name, filename, commandStr)
+            """.format(gdnfile, img, content, name, filename, commandStr)
 
 
 @app.route("/datainfo")

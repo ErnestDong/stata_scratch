@@ -172,16 +172,15 @@ def showAns(dependent: str, ans: dict, session: dict) -> str:
     return """<h1>log_lin_model not suit</h1>"""
 
 
-def showFigure(ans: dict) -> str:
+def showFigure(ans: dict) -> dict:
     if ans["flag"] == 1:
-        tfigure = create_t_figure(ans)
-        bfigure = create_b_figure(ans)
-        pfigure = create_p_figure(ans)
-        html = """<h3>t-value</h3><img src=\"{}\"/><br>" 
-               <h3>b-value</h3><img src=\"{}\"/><br>
-               <h3>p-value</h3><img src=\"{}\"/><br>""".format(tfigure, bfigure, pfigure)
-        return html
-    return """"""
+        tmp = {}
+        tmp["tvalue"] = create_t_figure(ans)
+        tmp["bvalue"] = create_b_figure(ans)
+        tmp["pvalue"] = create_p_figure(ans)
+        return tmp
+    return {}
+
 
 
 if __name__ == "__main__":
