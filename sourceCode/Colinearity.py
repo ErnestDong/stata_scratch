@@ -15,7 +15,7 @@ def auxiliary_regression(session: dict):
     f_1 = scipy.stats.f.ppf(0.99, len(X) - 1, observation - len(X))
     f_5 = scipy.stats.f.ppf(0.95, len(X) - 1, observation - len(X))
     f_10 = scipy.stats.f.ppf(0.90, len(X) - 1, observation - len(X))
-    html = """<table border='1'><tr><th>variable</th><th>R-square</th><th>VIF</th><th>F-value</th></tr>"""
+    html = """<h2>Colinearity Test</h2><table border='1'><tr><th>variable</th><th>R-square</th><th>VIF</th><th>F-value</th></tr>"""
     for i in range(len(X)):
         temp_y = X[i]
         X.pop(i)
