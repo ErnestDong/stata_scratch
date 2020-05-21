@@ -5,6 +5,7 @@ from io import BytesIO
 import base64
 import scipy
 
+
 def gethtml(lst: list):
     lenth = len(lst)
     html = "<table border='1'><tr>"
@@ -58,6 +59,7 @@ def get_corr(data: pd):
     #     ans+="</tr>"
     return "<img src=\"{}\"><br>".format(imd)  # ans+"</table>"
 
+
 def create_b_figure(ans: dict) -> str:
     args = ans["var"][1:]
     bvalue = ans["coefficient"]
@@ -77,6 +79,7 @@ def create_b_figure(ans: dict) -> str:
     imd = "data:image/png;base64," + ims
     plt.clf()
     return imd
+
 
 def create_p_figure(ans: dict) -> str:
     args = ans["var"][1:]
@@ -101,6 +104,7 @@ def create_p_figure(ans: dict) -> str:
     imd = "data:image/png;base64," + ims
     plt.clf()
     return imd
+
 
 def create_t_figure(ans: dict) -> str:
     n = ans["observation"]
@@ -130,6 +134,7 @@ def create_t_figure(ans: dict) -> str:
     imd = "data:image/png;base64," + ims
     plt.clf()
     return imd
+
 
 if __name__ == '__main__':
     # data = pd.read_csv("./tk/daily_Ashare.csv")

@@ -9,6 +9,7 @@ from sourceCode.func import create_t_figure
 from sourceCode.func import create_p_figure
 from sourceCode.func import create_b_figure
 
+
 def getAns(dependent: str, independent: list, session: dict) -> dict:
     """get p-value, f-value, R-square etc."""
     reg = LinearRegression()
@@ -49,10 +50,10 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         except ZeroDivisionError:
             ans["t"] = 9999999
         ans["P>|t|"] = [scipy.stats.t.sf(i, n - k) for i in ans["t"]]
-        ans["flag"]=1
+        ans["flag"] = 1
         return ans
     except:
-        ans["flag"]=0
+        ans["flag"] = 0
         return ans
 
 
@@ -159,26 +160,29 @@ def showAns(dependent: str, ans: dict, session: dict) -> str:
                     ans["var"][0])
             else:
                 html += """<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>""".format(ans["var"][i],
-                                                                                                      ans["coefficient"][
+                                                                                                      ans[
+                                                                                                          "coefficient"][
                                                                                                           i - 1],
-                                                                                                      ans["stderr"][i - 1],
+                                                                                                      ans["stderr"][
+                                                                                                          i - 1],
                                                                                                       ans["t"][i - 1],
-                                                                                                      ans["P>|t|"][i - 1])
+                                                                                                      ans["P>|t|"][
+                                                                                                          i - 1])
         return html + "</table>"
     return """<h1>log_lin_model not suit</h1>"""
 
 
-
 def showFigure(ans: dict) -> str:
-    if ans["flag"]==1:
-        tfigure=create_t_figure(ans)
-        bfigure=create_b_figure(ans)
-        pfigure=create_p_figure(ans)
+    if ans["flag"] == 1:
+        tfigure = create_t_figure(ans)
+        bfigure = create_b_figure(ans)
+        pfigure = create_p_figure(ans)
         html = """<h3>t-value</h3><img src=\"{}\"/><br>" 
                <h3>b-value</h3><img src=\"{}\"/><br>
-               <h3>p-value</h3><img src=\"{}\"/><br>""".format(tfigure,bfigure,pfigure)
+               <h3>p-value</h3><img src=\"{}\"/><br>""".format(tfigure, bfigure, pfigure)
         return html
     return """"""
+
 
 if __name__ == "__main__":
     # a=np.array([[1,2],[3,4]])

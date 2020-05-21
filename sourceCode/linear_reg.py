@@ -9,6 +9,7 @@ from sourceCode.func import create_t_figure
 from sourceCode.func import create_p_figure
 from sourceCode.func import create_b_figure
 
+
 def getAns(dependent: str, independent: list, session: dict) -> dict:
     """get p-value, f-value, R-square etc."""
     reg = LinearRegression()
@@ -30,8 +31,6 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         except ZeroDivisionError:
             ans["F-value"] = 9999999999999999
         ans["SS"] = {}
-        prediction = reg.predict(xs)
-        # print(sum(prediction**2)/sum(ys**2))
         tmp = sum((ys - ys.mean()) ** 2)
         ans["observation"] = n
         ans["df"] = k
@@ -50,19 +49,20 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         except ZeroDivisionError:
             ans["t"] = 9999999
         ans["P>|t|"] = [scipy.stats.t.sf(i, n - k) for i in ans["t"]]
-        ans["flag"]=1
+        ans["flag"] = 1
         return ans
     except:
-        ans["flag"]=0
+        ans["flag"] = 0
         return ans
 
 
 def format_(x):
     return str(x).rjust(10, ' ')
 
+
 def showAns(dependent: str, ans: dict, session: dict) -> str:
     """turn to html pages"""
-    if ans["flag"]==1:
+    if ans["flag"] == 1:
         username = session["username"]
         csvfile = open("./static/{}/downloads/ans.csv".format(username), "w", encoding="utf-8")
         print("dependent variable: ", dependent, file=csvfile)
@@ -159,25 +159,29 @@ def showAns(dependent: str, ans: dict, session: dict) -> str:
                     ans["var"][0])
             else:
                 html += """<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>""".format(ans["var"][i],
-                                                                                                      ans["coefficient"][
+                                                                                                      ans[
+                                                                                                          "coefficient"][
                                                                                                           i - 1],
-                                                                                                      ans["stderr"][i - 1],
+                                                                                                      ans["stderr"][
+                                                                                                          i - 1],
                                                                                                       ans["t"][i - 1],
-                                                                                                      ans["P>|t|"][i - 1])
+                                                                                                      ans["P>|t|"][
+                                                                                                          i - 1])
         return html + "</table>"
     return """linear_reg may not suit"""
 
 
 def showFigure(ans: dict) -> str:
-    if ans["flag"]==1:
-        tfigure=create_t_figure(ans)
-        bfigure=create_b_figure(ans)
-        pfigure=create_p_figure(ans)
+    if ans["flag"] == 1:
+        tfigure = create_t_figure(ans)
+        bfigure = create_b_figure(ans)
+        pfigure = create_p_figure(ans)
         html = """<h3>t-value</h3><img src=\"{}\"/><br>" 
                <h3>b-value</h3><img src=\"{}\"/><br>
-               <h3>p-value</h3><img src=\"{}\"/><br>""".format(tfigure,bfigure,pfigure)
+               <h3>p-value</h3><img src=\"{}\"/><br>""".format(tfigure, bfigure, pfigure)
         return html
     return """"""
+
 
 if __name__ == "__main__":
     # a=np.array([[1,2],[3,4]])

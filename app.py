@@ -189,7 +189,7 @@ def show():
                     <a href="./browse" target="_blank">view data</a>
                 </body>
                 </html>
-            """.format(gdnfile,figure , content, name, filename, commandStr)
+            """.format(gdnfile, figure, content, name, filename, commandStr)
 
 
 @app.route("/datainfo")
