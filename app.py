@@ -163,7 +163,8 @@ def show():
     figure = eval(tmp + ".showFigure({})".format(ans))
     img=""
     for i in figure:
-        img+="<h3>t-value</h3><img src=\"{}\"/><br".format(i,figure[i])
+        img+="""<h3>{}</h3><img src=\"{}\"/><br>
+             """.format(i,figure[i])
     data = pd.read_csv(filename)
     commandStr = "<form action=\"/result\" method=\"post\"><h2>please choose your command</h2>"
     title = list(data.columns)[1:]
