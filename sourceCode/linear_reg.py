@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 
-def getAns(dependent="", independent=[], session={}):
+
+def getAns(dependent: str, independent: list, session: dict) -> dict:
     """get p-value, f-value, R-square etc."""
     reg = LinearRegression()
-    filename=session["filename"]
+    filename = session["filename"]
     data = pd.read_csv(filename)
     ys = data[dependent].values
     xs = data[independent].values
@@ -24,7 +25,7 @@ def getAns(dependent="", independent=[], session={}):
     try:
         ans["F-value"] = ans["R-squared"] / (1 - ans["R-squared"]) * (n - k) / (k - 1)
     except ZeroDivisionError:
-        ans["F-value"]=9999999999999999
+        ans["F-value"] = 9999999999999999
     ans["SS"] = {}
     prediction = reg.predict(xs)
     # print(sum(prediction**2)/sum(ys**2))
@@ -53,14 +54,15 @@ def format_(x):
     return str(x).rjust(10, ' ')
 
 
-def showAns(dependent="", ans={}, session={}):
+def showAns(dependent: str, ans: dict, session: dict) -> str:
     """turn to html pages"""
-    username=session["username"]
-    csvfile=open("./static/{}/downloads/ans.csv".format(username),"w",encoding="utf-8")
+    username = session["username"]
+    csvfile = open("./static/{}/downloads/ans.csv".format(username), "w", encoding="utf-8")
     print("dependent variable: ", dependent, file=csvfile)
-    print("variables,Coefficients,Standard Errors,t values,Probabilities",file=csvfile)
+    print("variables,Coefficients,Standard Errors,t values,Probabilities", file=csvfile)
     for i in range(ans["df"]):
-        print(ans["var"][i+1],ans["coefficient"][i],ans["stderr"][i],ans["t"][i],ans["P>|t|"][i],sep=',',file=csvfile)
+        print(ans["var"][i + 1], ans["coefficient"][i], ans["stderr"][i], ans["t"][i], ans["P>|t|"][i], sep=',',
+              file=csvfile)
     csvfile.close()
     html = """
         <table border="1" style="width: 600px;">
@@ -158,17 +160,17 @@ def showAns(dependent="", ans={}, session={}):
     return html + "</table>"
 
 
-def create_b_figure(ans={}):
-    args=ans["var"][1:]
-    bvalue=ans["coefficient"]
+def create_b_figure(ans: dict) -> str:
+    args = ans["var"][1:]
+    bvalue = ans["coefficient"]
     plt.bar(args, bvalue)
     for a, b in zip(args, bvalue):
-        plt.text(a, b+0.003, '%.3f' % b, ha='center',va='bottom',fontsize=11)
+        plt.text(a, b + 0.003, '%.3f' % b, ha='center', va='bottom', fontsize=11)
     plt.xlabel('variables')
     plt.ylabel('b-value')
-    plt.ylim(min(0,min(bvalue)*1.2), max(0,max(bvalue)*1.2))
+    plt.ylim(min(0, min(bvalue) * 1.2), max(0, max(bvalue) * 1.2))
     plt.rcParams['figure.figsize'] = (8.0, 4.0)
-    plt.title="b value"
+    plt.title = "b value"
     buffer = BytesIO()
     plt.savefig(buffer)
     plot_data = buffer.getvalue()
@@ -177,20 +179,22 @@ def create_b_figure(ans={}):
     imd = "data:image/png;base64," + ims
     plt.clf()
     return imd
-def create_p_figure(ans={}):
-    args=ans["var"][1:]
-    pvalue=ans["P>|t|"]
+
+
+def create_p_figure(ans: dict) -> str:
+    args = ans["var"][1:]
+    pvalue = ans["P>|t|"]
     plt.bar(args, pvalue)
     for a, b in zip(args, pvalue):
-        plt.text(a, b+0.003, '%.3f' % b, ha='center',va='bottom',fontsize=11)
+        plt.text(a, b + 0.003, '%.3f' % b, ha='center', va='bottom', fontsize=11)
     plt.xlabel('variables')
     plt.ylabel('p-value')
-    plt.ylim(min(0,min(pvalue)*1.2), max(0,max(pvalue)*1.2))
-    plt.axhline(y=0.01,ls="-",c="violet",label="1%")
-    plt.axhline(y=0.05,ls="-",c="mediumpurple",label="5%")
-    plt.axhline(y=0.1,ls="-",c="cornflowerblue",label="10%")
+    plt.ylim(min(0, min(pvalue) * 1.2), max(0, max(pvalue) * 1.2))
+    plt.axhline(y=0.01, ls="-", c="violet", label="1%")
+    plt.axhline(y=0.05, ls="-", c="mediumpurple", label="5%")
+    plt.axhline(y=0.1, ls="-", c="cornflowerblue", label="10%")
     plt.rcParams['figure.figsize'] = (8.0, 4.0)
-    plt.title="p value"
+    plt.title = "p value"
     plt.legend()
     buffer = BytesIO()
     plt.savefig(buffer)
@@ -200,25 +204,27 @@ def create_p_figure(ans={}):
     imd = "data:image/png;base64," + ims
     plt.clf()
     return imd
-def create_t_figure(ans={}):
-    n=ans["observation"]
-    args=ans["var"][1:]
-    k=ans["df"]
-    tvalue=ans["t"]
-    t_1=scipy.stats.t.ppf(0.995,n-k)
-    t_5=scipy.stats.t.ppf(0.975,n-k)
-    t_10=scipy.stats.t.ppf(0.95,n-k)
+
+
+def create_t_figure(ans: dict) -> str:
+    n = ans["observation"]
+    args = ans["var"][1:]
+    k = ans["df"]
+    tvalue = ans["t"]
+    t_1 = scipy.stats.t.ppf(0.995, n - k)
+    t_5 = scipy.stats.t.ppf(0.975, n - k)
+    t_10 = scipy.stats.t.ppf(0.95, n - k)
     plt.bar(args, tvalue)
     for a, b in zip(args, tvalue):
-        plt.text(a, b+0.003, '%.3f' % b, ha='center',va='bottom',fontsize=11)
+        plt.text(a, b + 0.003, '%.3f' % b, ha='center', va='bottom', fontsize=11)
     plt.xlabel('variables')
     plt.ylabel('t-value')
-    plt.ylim(min(0,min(tvalue)*1.2), max(0,max(tvalue)*1.2))
-    plt.axhline(y=t_1,ls="-",c="violet",label="1%")
-    plt.axhline(y=t_5,ls="-",c="mediumpurple",label="5%")
-    plt.axhline(y=t_10,ls="-",c="cornflowerblue",label="10%")
+    plt.ylim(min(0, min(tvalue) * 1.2), max(0, max(tvalue) * 1.2))
+    plt.axhline(y=t_1, ls="-", c="violet", label="1%")
+    plt.axhline(y=t_5, ls="-", c="mediumpurple", label="5%")
+    plt.axhline(y=t_10, ls="-", c="cornflowerblue", label="10%")
     plt.rcParams['figure.figsize'] = (8.0, 4.0)
-    plt.title="t value"
+    plt.title = "t value"
     plt.legend()
     buffer = BytesIO()
     plt.savefig(buffer)
@@ -228,6 +234,8 @@ def create_t_figure(ans={}):
     imd = "data:image/png;base64," + ims
     plt.clf()
     return imd
+
+
 if __name__ == "__main__":
     # a=np.array([[1,2],[3,4]])
     # b=np.linalg.inv(a)

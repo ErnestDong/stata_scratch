@@ -3,7 +3,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from io import BytesIO
 import base64
-def gethtml(lst):
+
+
+def gethtml(lst: list):
     lenth = len(lst)
     html = "<table border='1'><tr>"
     for line in range(lenth):
@@ -21,21 +23,20 @@ def gethtml(lst):
     return html + "</table>"
 
 
-
-def get_corr(data):
+def get_corr(data: pd):
     """
     get corr matrix in html table
     :param data: dataframe
     :return:
     """
-    corr=data.corr()
-    lst=corr.values.tolist()
-    name=list(corr.columns)
+    corr = data.corr()
+    lst = corr.values.tolist()
+    name = list(corr.columns)
     # print(name)
-    length=len(name)
+    length = len(name)
     for i in range(length):
-        lst[i].insert(0,name[i])
-    lst.insert(0,["corr"]+name)
+        lst[i].insert(0, name[i])
+    lst.insert(0, ["corr"] + name)
     # ans="<table border=\"1\">"
     a = data.corr()
     plt.subplots(figsize=(9, 9))
@@ -55,30 +56,10 @@ def get_corr(data):
     #         else:
     #             ans+="<td bgcolor='#{}'>{}</td>".format(colorize(j),str(j))
     #     ans+="</tr>"
-    return "<img src=\"{}\"><br>".format(imd) # ans+"</table>"
+    return "<img src=\"{}\"><br>".format(imd)  # ans+"</table>"
 
-def colorize(corr):
-    if isinstance(corr,str):
-        return "FFFFFF"
-    if corr < 0.1:
-        return "afdfe4"
-    if corr <0.2:
-        return "94d6da"
-    if corr < 0.3:
-        return "90d7ec"
-    if corr < 0.4:
-        return "7bbfea"
-    if corr < 0.5:
-        return "33a3dc"
-    if corr < 0.6:
-        return "228bfd"
-    if corr < 0.7:
-        return "2570a1"
-    if corr < 0.8:
-        return "009ad6"
-    if corr < 0.9:
-        return "246802"
-    return "2a5caa"
+
 if __name__ == '__main__':
-    data=pd.read_csv("./tk/daily_Ashare.csv")
-    print(get_corr(data))
+    # data = pd.read_csv("./tk/daily_Ashare.csv")
+    # print(get_corr(data))
+    pass

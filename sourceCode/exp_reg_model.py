@@ -7,7 +7,7 @@ import base64
 from io import BytesIO
 
 
-def getAns(dependent="", independent=[], session={}):
+def getAns(dependent: str, independent: list, session: dict) -> dict:
     """get p-value, f-value, R-square etc."""
     reg = LinearRegression()
     filename = session["filename"]
@@ -56,7 +56,7 @@ def format_(x):
     return str(x).rjust(10, ' ')
 
 
-def showAns(dependent="", ans={}, session={}):
+def showAns(dependent: str, ans: dict, session: dict) -> str:
     """turn to html pages"""
     username = session["username"]
     csvfile = open("./static/{}/downloads/ans.csv".format(username), "w", encoding="utf-8")
@@ -162,7 +162,7 @@ def showAns(dependent="", ans={}, session={}):
     return html + "</table>"
 
 
-def create_b_figure(ans={}):
+def create_b_figure(ans: dict) -> str:
     args = ans["var"][1:]
     bvalue = ans["coefficient"]
     plt.bar(args, bvalue)
@@ -183,7 +183,7 @@ def create_b_figure(ans={}):
     return imd
 
 
-def create_p_figure(ans={}):
+def create_p_figure(ans: dict) -> str:
     args = ans["var"][1:]
     pvalue = ans["P>|t|"]
     plt.bar(args, pvalue)
@@ -208,7 +208,7 @@ def create_p_figure(ans={}):
     return imd
 
 
-def create_t_figure(ans={}):
+def create_t_figure(ans: dict) -> str:
     n = ans["observation"]
     args = ans["var"][1:]
     k = ans["df"]

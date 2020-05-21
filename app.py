@@ -12,7 +12,7 @@ from sourceCode import lin_log_model
 from sourceCode.func import get_corr, gethtml
 
 app = Flask(__name__)
-commandList = ["linear_reg","exp_reg_model","log_lin_model","lin_log_model"]
+commandList = ["linear_reg", "exp_reg_model", "log_lin_model", "lin_log_model"]
 session = {}
 
 
@@ -40,7 +40,7 @@ def passwd():
             return render_template("login.html", script="alert('Wrong Password!')")
         """if all is well"""
         session["username"] = name
-        session["command"]=[]
+        session["command"] = []
         if os.path.exists("./static/" + name):
             shutil.rmtree("./static/" + name)
         return redirect("data")
@@ -81,7 +81,7 @@ def upload():
         base_path = path.abspath(path.dirname(__file__))
         upload_path = path.join(base_path, 'static/{}/uploads/'.format(name))
         file_name = upload_path + secure_filename(f.filename)
-        session["filename"]=file_name
+        session["filename"] = file_name
         f.save(file_name)
         return redirect("check")
     return render_template('upload.html')
@@ -97,7 +97,7 @@ def checkResult():
     """
     # try:
     # name = session["username"]
-    filename=session["filename"]
+    filename = session["filename"]
     uploadFile = open(filename, "r", encoding="utf-8")
     fileinfo = uploadFile.readlines()[:20]
     fileinfo = gethtml(fileinfo)
@@ -116,7 +116,7 @@ def showResult():
     try:
         # name = session["username"]
         nullMethod = request.form["isnull"]
-        filename=session["filename"]
+        filename = session["filename"]
         # session["command"].append(nullMethod)
         data = pd.read_csv(filename)
         if nullMethod[0] == "d":
@@ -135,7 +135,7 @@ def showResult():
         commandStr += "<br><h2>please choose your independent variable(s)</h2>"
         for i in title:
             commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(i, i)
-        commandStr+="<a href=./browse target=\"_blank\">view data</a>"
+        commandStr += "<a href=./browse target=\"_blank\">view data</a>"
         return render_template("clean.html", command=commandStr)
     except ValueError:
         return redirect("VE")
@@ -149,22 +149,22 @@ def show():
     show the result
     """
     name = session["username"]
-    filename=session["filename"]
+    filename = session["filename"]
     tmp = request.form["command"]
     dependentVariable = request.form["dependent"]
     independentVariable = request.form.getlist("independent")
-    session["dependent"]=dependentVariable
-    session["independent"]=independentVariable
+    session["dependent"] = dependentVariable
+    session["independent"] = independentVariable
     independentVariable[-1] = independentVariable[-1]
     ans = eval(tmp + ".getAns('{}',{},{})".format(dependentVariable, independentVariable, session))
     gdnfile = eval(tmp + ".showAns('{}',{},{})".format(dependentVariable, ans, session))
     # session["command"].append(tmp)
-    content="<br>"#.join(session["command"])
+    content = "<br>"  # .join(session["command"])
     tfigure = eval(tmp + ".create_t_figure({})".format(ans))
     bfigure = eval(tmp + ".create_b_figure({})".format(ans))
     pfigure = eval(tmp + ".create_p_figure({})".format(ans))
     del ans
-    data=pd.read_csv(filename)
+    data = pd.read_csv(filename)
     commandStr = "<form action=\"/result\" method=\"post\"><h2>please choose your command</h2>"
     title = list(data.columns)[1:]
     for i in commandList:
@@ -175,7 +175,7 @@ def show():
     commandStr += "<br><h2>please choose your independent variable(s)</h2>"
     for i in title:
         commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(i, i)
-    commandStr+="<input type=\"submit\"/></form>"
+    commandStr += "<input type=\"submit\"/></form>"
     return """<html>
                 <head>
                     <title>ans</title>
@@ -195,7 +195,7 @@ def show():
                     <a href="./browse" target="_blank">view data</a>
                 </body>
                 </html>
-            """.format(gdnfile, tfigure, bfigure, pfigure, content, name, filename,commandStr)
+            """.format(gdnfile, tfigure, bfigure, pfigure, content, name, filename, commandStr)
 
 
 @app.route("/datainfo")
@@ -242,9 +242,11 @@ def valerr():
         </html>
     """
     return html
+
+
 @app.route("/browse")
 def data_broser():
-    filename=session["filename"]
+    filename = session["filename"]
     uploadFile = open(filename, "r", encoding="utf-8")
     fileinfo = uploadFile.readlines()
     fileinfo = gethtml(fileinfo)
@@ -264,4 +266,4 @@ def data_broser():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=80)
+    app.run(host="0.0.0.0", port=80)
