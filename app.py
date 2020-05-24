@@ -9,13 +9,15 @@ from sourceCode import linear_reg
 from sourceCode import exp_reg_model
 from sourceCode import log_lin_model
 from sourceCode import lin_log_model
+from sourceCode import logit
+from sourceCode import probit
 from sourceCode.Colinearity import auxiliary_regression
 from sourceCode.Hausman import hausmantest
 from sourceCode.White import whitetest
 from sourceCode.func import get_corr, gethtml
 
 app = Flask(__name__)
-commandList = ["linear_reg", "exp_reg_model", "log_lin_model", "lin_log_model"]
+commandList = ["linear_reg", "exp_reg_model", "log_lin_model", "lin_log_model", "logit", "probit"]
 session = {}
 
 
