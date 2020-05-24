@@ -84,6 +84,8 @@ def upload():
         base_path = path.abspath(path.dirname(__file__))
         upload_path = path.join(base_path, 'static/{}/uploads/'.format(name))
         file_name = upload_path + secure_filename(f.filename)
+        if file_name[-4:] != ".csv":
+            return redirect("data")
         session["filename"] = file_name
         f.save(file_name)
         return redirect("check")
