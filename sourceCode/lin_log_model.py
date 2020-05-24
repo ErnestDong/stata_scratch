@@ -19,6 +19,11 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
     x = data[independent].values
     ans = {}
     try:
+        for i in x:
+            if i <= 0:
+                ans["flag"] = 0
+                session["error"] = "dependent variable has 0. exp_reg_model not suit"
+                return ans
         xs = np.log(x)
         reg.fit(xs, ys)
         ans["var"] = [dependent, "Constant"] + independent
@@ -56,6 +61,7 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         return ans
     except:
         ans["flag"] = 0
+        session["error"] = "please check your data"
         return ans
 
 

@@ -20,6 +20,10 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         y = data[dependent].values
         xs = data[independent].values
         ys = [np.log(yi/(1-yi)) for yi in y]
+        for i in ys:
+            if i > 1 or i < 0:
+                session["error"]="probability is not in [0, 1]"
+                return ans
         reg.fit(xs, ys)
         ans["var"] = [dependent, "Constant"] + independent
         n = len(ys)
@@ -54,6 +58,7 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         return ans
     except:
         ans["flag"] = 0
+        session["error"] = "please check your data"
         return ans
 
 

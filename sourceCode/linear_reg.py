@@ -53,6 +53,7 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         return ans
     except:
         ans["flag"] = 0
+        session["error"] = "please check your data"
         return ans
 
 

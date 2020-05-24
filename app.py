@@ -75,25 +75,26 @@ def upload():
     write the filename into ./static/username/loadfile.txt
     jump to upload page to preview data and choose method
     """
-    # try:
-    name = session["username"]
-    if not os.path.exists("./static/" + name):
-        os.mkdir("./static/" + name)
-        os.mkdir("./static/{}/uploads".format(name))
-        os.mkdir("./static/{}/downloads".format(name))
-    if request.method == 'POST':
-        f = request.files["file"]
-        base_path = path.abspath(path.dirname(__file__))
-        upload_path = path.join(base_path, 'static/{}/uploads/'.format(name))
-        file_name = upload_path + secure_filename(f.filename)
-        if file_name[-4:] != ".csv":
-            return redirect("data")
-        session["filename"] = file_name
-        f.save(file_name)
-        return redirect("check")
-    return render_template('upload.html')
-    # except Exception:
-    #     return redirect("error")
+    try:
+        name = session["username"]
+        if not os.path.exists("./static/" + name):
+            os.mkdir("./static/" + name)
+            os.mkdir("./static/{}/uploads".format(name))
+            os.mkdir("./static/{}/downloads".format(name))
+        if request.method == 'POST':
+            f = request.files["file"]
+            base_path = path.abspath(path.dirname(__file__))
+            upload_path = path.join(base_path, 'static/{}/uploads/'.format(name))
+            file_name = upload_path + secure_filename(f.filename)
+            if file_name[-4:] != ".csv":
+                return redirect("data")
+            session["filename"] = file_name
+            f.save(file_name)
+            return redirect("check")
+        return render_template('upload.html')
+    except Exception:
+        session["error"] = "please check your data"
+        return redirect("error")
 
 
 @app.route("/check", methods=['GET', 'POST'])
@@ -102,16 +103,17 @@ def checkResult():
     show about 20 lines of data
     clean data
     """
-    # try:
+    try:
     # name = session["username"]
-    filename = session["filename"]
-    uploadFile = open(filename, "r", encoding="utf-8")
-    fileinfo = uploadFile.readlines()[:20]
-    fileinfo = gethtml(fileinfo)
-    uploadFile.close()
-    return render_template("show.html", file=fileinfo)
-    # except Exception:
-    #     return redirect("error")
+        filename = session["filename"]
+        uploadFile = open(filename, "r", encoding="utf-8")
+        fileinfo = uploadFile.readlines()[:20]
+        fileinfo = gethtml(fileinfo)
+        uploadFile.close()
+        return render_template("show.html", file=fileinfo)
+    except Exception:
+        session["error"] = "please check your data"
+        return redirect("error")
 
 
 @app.route("/upload", methods=['GET', 'POST'])
@@ -163,46 +165,50 @@ def show():
     session["dependent"] = dependentVariable
     session["independent"] = independentVariable
     independentVariable[-1] = independentVariable[-1]
-    ans = eval(tmp + ".getAns('{}',{},{})".format(dependentVariable, independentVariable, session))
-    gdnfile = eval(tmp + ".showAns('{}',{},{})".format(dependentVariable, ans, session))
-    # session["command"].append(tmp)
-    content = "<br>"  # .join(session["command"])
-    figure = eval(tmp + ".showFigure({})".format(ans))
-    img=""
-    for i in figure:
-        img+="""<h3>{}</h3><img src=\"{}\"/><br>
-             """.format(i,figure[i])
-    data = pd.read_csv(filename)
-    commandStr = "<form action=\"/result\" method=\"post\"><h2>please choose your command</h2>"
-    title = list(data.columns)[1:]
-    for i in commandList:
-        commandStr += "<input type='radio' value='{}' name='command'>{}<br>".format(i, i)
-    commandStr += "<br><h2>please choose your dependent variable</h2>"
-    for i in title:
-        commandStr += "<input type='radio' value='{}' name='dependent'>{}<br>".format(i, i)
-    commandStr += "<br><h2>please choose your independent variable(s)</h2>"
-    for i in title:
-        commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(i, i)
-    commandStr += "<input type=\"submit\"/></form>"
-    session["ans"]=ans
-    return """<html>
-                <head>
-                    <title>ans</title>
-                </head>
-                <body>
-                <a href="/classic" target="_blank">test hypothesis</a>
-                    <h1>datainfo</h1>
-                    <p>{}</p>
-                    <a href="/datainfo">Click to Download the Result</a>
-                    {}
-                    {}
-                    <a href="/check">preview again</a>
-                    <a href="./static/{}/uploads/{}">download your raw data</a>
-                    {}<br>
-                    <a href="./browse" target="_blank">view data</a>
-                </body>
-                </html>
-            """.format(gdnfile, img, content, name, filename, commandStr)
+    try:
+        ans = eval(tmp + ".getAns('{}',{},{})".format(dependentVariable, independentVariable, session))
+        gdnfile = eval(tmp + ".showAns('{}',{},{})".format(dependentVariable, ans, session))
+        # session["command"].append(tmp)
+        content = "<br>"  # .join(session["command"])
+        figure = eval(tmp + ".showFigure({})".format(ans))
+        img=""
+        for i in figure:
+            img+="""<h3>{}</h3><img src=\"{}\"/><br>
+                 """.format(i,figure[i])
+        data = pd.read_csv(filename)
+        commandStr = "<form action=\"/result\" method=\"post\"><h2>please choose your command</h2>"
+        title = list(data.columns)[1:]
+        for i in commandList:
+            commandStr += "<input type='radio' value='{}' name='command'>{}<br>".format(i, i)
+        commandStr += "<br><h2>please choose your dependent variable</h2>"
+        for i in title:
+            commandStr += "<input type='radio' value='{}' name='dependent'>{}<br>".format(i, i)
+        commandStr += "<br><h2>please choose your independent variable(s)</h2>"
+        for i in title:
+            commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(i, i)
+        commandStr += "<input type=\"submit\"/></form>"
+        session["ans"]=ans
+        return """<html>
+                    <head>
+                        <title>ans</title>
+                    </head>
+                    <body>
+                    <a href="/classic" target="_blank">test hypothesis</a>
+                        <h1>datainfo</h1>
+                        <p>{}</p>
+                        <a href="/datainfo">Click to Download the Result</a>
+                        {}
+                        {}
+                        <a href="/check">preview again</a>
+                        <a href="./static/{}/uploads/{}">download your raw data</a>
+                        {}<br>
+                        <a href="./browse" target="_blank">view data</a>
+                    </body>
+                    </html>
+                """.format(gdnfile, img, content, name, filename, commandStr)
+    except:
+        session["error"] = "please check your data"
+        return redirect("error")
 
 @app.route("/classic")
 def testClassic():
@@ -260,12 +266,12 @@ def valerr():
           </head>
           <body>
           <script>
-          alert("Is it dummy?")
+          alert({})
           </script>
             <a href="/check">return to check page</a>
           </body>
         </html>
-    """
+    """.format(session["error"])
     return html
 
 
