@@ -22,7 +22,8 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         for i in y:
             if i <= 0:
                 ans["flag"] = 0
-                session["error"] = "dependent variable has 0. exp_reg_model not suit"
+                session[
+                    "error"] = "dependent variable has 0. exp_reg_model not suit"
                 return ans
         ys = np.log(y)
         reg.fit(xs, ys)
@@ -31,19 +32,21 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         k = len(independent) + 1
         ans["coefficient"] = np.append(reg.intercept_, reg.coef_).tolist()
         ans["R-squared"] = reg.score(xs, ys)
-        ans["Adjusted R-squared"] = 1 - (1 - ans["R-squared"]) * (n - 1) / (n - k)
+        ans["Adjusted R-squared"] = 1 - (1 - ans["R-squared"]) * (n - 1) / (n -
+                                                                            k)
         try:
-            ans["F-value"] = ans["R-squared"] / (1 - ans["R-squared"]) * (n - k) / (k - 1)
+            ans["F-value"] = ans["R-squared"] / (1 - ans["R-squared"]) * (
+                n - k) / (k - 1)
         except ZeroDivisionError:
             ans["F-value"] = 9999999999999999
         ans["SS"] = {}
-        tmp = sum((ys - ys.mean()) ** 2)
+        tmp = sum((ys - ys.mean())**2)
         ans["observation"] = n
         ans["df"] = k
         ans["SS"]["ESS"] = tmp * ans["R-squared"]
         ans["SS"]["RSS"] = tmp - ans["SS"]["ESS"]
         ans["Prob>F"] = scipy.stats.f.sf(ans["F-value"], k - 1, n - k)
-        ans["Root MSE"] = (ans["SS"]["RSS"] / (n - k)) ** 0.5
+        ans["Root MSE"] = (ans["SS"]["RSS"] / (n - k))**0.5
         sigma_square = ans["SS"]["RSS"] / (n - k)
         one = np.ones(n)
         xs = np.insert(xs, 0, values=one, axis=1)
@@ -51,7 +54,9 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         var_cov_beta = sigma_square * np.linalg.inv(tmp)
         ans["stderr"] = np.sqrt(var_cov_beta.diagonal()).tolist()
         try:
-            ans["t"] = [ans["coefficient"][i] / ans["stderr"][i] for i in range(k)]
+            ans["t"] = [
+                ans["coefficient"][i] / ans["stderr"][i] for i in range(k)
+            ]
         except ZeroDivisionError:
             ans["t"] = 9999999
         ans["P>|t|"] = [scipy.stats.t.sf(i, n - k) for i in ans["t"]]
@@ -71,11 +76,19 @@ def showAns(dependent: str, ans: dict, session: dict) -> str:
     """turn to html pages"""
     if ans["flag"] == 1:
         username = session["username"]
-        csvfile = open("./static/{}/downloads/ans.csv".format(username), "w", encoding="utf-8")
+        csvfile = open("./static/{}/downloads/ans.csv".format(username),
+                       "w",
+                       encoding="utf-8")
         print("dependent variable: ", dependent, file=csvfile)
-        print("variables,Coefficients,Standard Errors,t values,Probabilities", file=csvfile)
+        print("variables,Coefficients,Standard Errors,t values,Probabilities",
+              file=csvfile)
         for i in range(ans["df"]):
-            print(ans["var"][i + 1], ans["coefficient"][i], ans["stderr"][i], ans["t"][i], ans["P>|t|"][i], sep=',',
+            print(ans["var"][i + 1],
+                  ans["coefficient"][i],
+                  ans["stderr"][i],
+                  ans["t"][i],
+                  ans["P>|t|"][i],
+                  sep=',',
                   file=csvfile)
         csvfile.close()
         html = """
@@ -107,11 +120,15 @@ def showAns(dependent: str, ans: dict, session: dict) -> str:
             <td>{}</td>
           </tr>
         </table>
-        """.format(format_(ans["SS"]["ESS"]), format_(ans["df"] - 1), format_(ans["SS"]["ESS"] / (ans["df"] - 1)),
-                   format_(ans["SS"]["RSS"]), format_(ans["observation"] - ans["df"]),
-                   format_(ans["SS"]["RSS"] / (ans["observation"] - ans["df"])),
-                   format_(ans["SS"]["ESS"] + ans["SS"]["RSS"]), format_(ans["observation"] - 1),
-                   format_((ans["SS"]["ESS"] + ans["SS"]["RSS"]) / (ans["observation"] - 1)))
+        """.format(
+            format_(ans["SS"]["ESS"]), format_(ans["df"] - 1),
+            format_(ans["SS"]["ESS"] / (ans["df"] - 1)),
+            format_(ans["SS"]["RSS"]), format_(ans["observation"] - ans["df"]),
+            format_(ans["SS"]["RSS"] / (ans["observation"] - ans["df"])),
+            format_(ans["SS"]["ESS"] + ans["SS"]["RSS"]),
+            format_(ans["observation"] - 1),
+            format_((ans["SS"]["ESS"] + ans["SS"]["RSS"]) /
+                    (ans["observation"] - 1)))
         html += """
         <table style="width: 600px;">
           <tr>
@@ -157,23 +174,18 @@ def showAns(dependent: str, ans: dict, session: dict) -> str:
             <td align="right">{}</td>
           </tr>
         </table><table style="width:600px;" border="1">
-        """.format(str(ans["observation"]), str(ans["df"] - 1), str(ans["observation"] - ans["df"]),
-                   str(ans["F-value"]), str(ans["Prob>F"]), str(ans["R-squared"]), str(ans["Adjusted R-squared"]),
-                   str(ans["Root MSE"]))
+        """.format(str(ans["observation"]), str(ans["df"] - 1),
+                   str(ans["observation"] - ans["df"]), str(ans["F-value"]),
+                   str(ans["Prob>F"]), str(ans["R-squared"]),
+                   str(ans["Adjusted R-squared"]), str(ans["Root MSE"]))
         for i in range(len(ans["var"])):
             if i == 0:
                 html += """<tr><td>{}</td><td>Coef.</td><td>Std. Err.</td><td>t</td><td> P>|t| </td></tr>""".format(
                     ans["var"][0])
             else:
-                html += """<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>""".format(ans["var"][i],
-                                                                                                      ans[
-                                                                                                          "coefficient"][
-                                                                                                          i - 1],
-                                                                                                      ans["stderr"][
-                                                                                                          i - 1],
-                                                                                                      ans["t"][i - 1],
-                                                                                                      ans["P>|t|"][
-                                                                                                          i - 1])
+                html += """<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>""".format(
+                    ans["var"][i], ans["coefficient"][i - 1],
+                    ans["stderr"][i - 1], ans["t"][i - 1], ans["P>|t|"][i - 1])
         return html + "</table>"
     return """<h1>log_lin_model not suit</h1>"""
 
@@ -186,7 +198,6 @@ def showFigure(ans: dict) -> dict:
         tmp["pvalue"] = create_p_figure(ans)
         return tmp
     return {}
-
 
 
 if __name__ == "__main__":

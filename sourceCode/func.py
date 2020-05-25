@@ -68,7 +68,12 @@ def create_b_figure(ans: dict) -> str:
     bvalue = ans["coefficient"]
     plt.bar(args, bvalue)
     for a, b in zip(args, bvalue):
-        plt.text(a, b + 0.003, '%.3f' % b, ha='center', va='bottom', fontsize=11)
+        plt.text(a,
+                 b + 0.003,
+                 '%.3f' % b,
+                 ha='center',
+                 va='bottom',
+                 fontsize=11)
     plt.xlabel('variables')
     plt.ylabel('b-value')
     plt.ylim(min(0, min(bvalue) * 1.2), max(0, max(bvalue) * 1.2))
@@ -89,7 +94,12 @@ def create_p_figure(ans: dict) -> str:
     pvalue = ans["P>|t|"]
     plt.bar(args, pvalue)
     for a, b in zip(args, pvalue):
-        plt.text(a, b + 0.003, '%.3f' % b, ha='center', va='bottom', fontsize=11)
+        plt.text(a,
+                 b + 0.003,
+                 '%.3f' % b,
+                 ha='center',
+                 va='bottom',
+                 fontsize=11)
     plt.xlabel('variables')
     plt.ylabel('p-value')
     plt.ylim(min(0, min(pvalue) * 1.2), max(0, max(pvalue) * 1.2))
@@ -119,7 +129,12 @@ def create_t_figure(ans: dict) -> str:
     t_10 = scipy.stats.t.ppf(0.95, n - k)
     plt.bar(args, tvalue)
     for a, b in zip(args, tvalue):
-        plt.text(a, b + 0.003, '%.3f' % b, ha='center', va='bottom', fontsize=11)
+        plt.text(a,
+                 b + 0.003,
+                 '%.3f' % b,
+                 ha='center',
+                 va='bottom',
+                 fontsize=11)
     plt.xlabel('variables')
     plt.ylabel('t-value')
     plt.ylim(min(0, min(tvalue) * 1.2), max(0, max(tvalue) * 1.2))

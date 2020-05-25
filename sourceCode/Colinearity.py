@@ -31,14 +31,21 @@ def auxiliary_regression(session: dict):
             F = str(F) + "*"
         VIF = np.round(1 / (1 - R2), 4)
         R2 = np.round(R2, 4)
-        html += "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(independent[i], R2, VIF, F)
+        html += "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+            independent[i], R2, VIF, F)
         X.insert(i, temp_y)
     return html + "</table>"
 
 
 if __name__ == '__main__':
-    print(auxiliary_regression({"independent": ['open', 'high'], "dependent": "low",
-                                "filename": "/Users/dcy/code/asdfghjkl/sourceCode/tk/daily_Ashare.csv"}))
+    print(
+        auxiliary_regression({
+            "independent": ['open', 'high'],
+            "dependent":
+            "low",
+            "filename":
+            "/Users/dcy/code/asdfghjkl/sourceCode/tk/daily_Ashare.csv"
+        }))
     # data = pd.read_csv("/Users/dcy/code/asdfghjkl/sourceCode/tk/daily_Ashare.csv")
     # print(len(data))
     # f_1 = scipy.stats.f.ppf(0.995, len(X) - 1, observation - len(X))

@@ -5,17 +5,17 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 
 
-def hausmantest(session:dict):
+def hausmantest(session: dict):
     filename = session["filename"]
     data = pd.read_csv(filename).dropna()
     independent = session["independent"]
     dependent = session["dependent"]
     X = list(independent)
     all = list(independent)
-    params=[]
-    ts_b=[]
-    sd_b=[]
-    p_values=[]
+    params = []
+    ts_b = []
+    sd_b = []
+    p_values = []
     raw = data[all]
     for i in range(len(X)):
         tmp = X.pop(i)
@@ -35,8 +35,19 @@ def hausmantest(session:dict):
         X = list(independent)
     html = """<h2>Hausman Test</h2><table border='1'><tr><th>variable</th><th>Coefficients</th><th>std err</th><th>t-value</th><th>p-value</th></tr>"""
     for i in range(len(independent)):
-        html+="<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(X[i],params[i],sd_b[i],ts_b[i],p_values[i])
+        html += "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+            X[i], params[i], sd_b[i], ts_b[i], p_values[i])
     return html + "</table>"
 
+
 if __name__ == '__main__':
-    print(hausmantest({"filename":"/Users/dcy/code/asdfghjkl/sourceCode/tk/daily_Ashare.csv","dependent":"open","independent":["high","low"],"ans":{"coefficient":[1,2,3]}}))
+    print(
+        hausmantest({
+            "filename":
+            "/Users/dcy/code/asdfghjkl/sourceCode/tk/daily_Ashare.csv",
+            "dependent": "open",
+            "independent": ["high", "low"],
+            "ans": {
+                "coefficient": [1, 2, 3]
+            }
+        }))

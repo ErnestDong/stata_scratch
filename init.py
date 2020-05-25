@@ -12,4 +12,4 @@ import sourceCode.Colinearity as au_reg
 import sourceCode.Hausman as HausmanTest
 import sourceCode.White as WhiteTest
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=80)
+    app.run(host="0.0.0.0", port=80)
