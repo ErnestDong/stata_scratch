@@ -1,3 +1,6 @@
+"""
+run the script
+"""
 from app import app
 import sourceCode.probit as probit
 import sourceCode.logit as logit
