@@ -21,3 +21,5 @@
 ## 其他
 
 `session`中包括了当前登陆的用户名`username`，用户上传文件的绝对路径`filename`当前的回归模型`command`，当前解释变量名字组成的列表`dependent`，被解释变量名字`independent`，错误描述`error`等
+
+数据浏览器位于/browser
