@@ -37,5 +37,5 @@ os: macOS 10.15.4
 ### 执行
 
 ```python
-python3 init.py
+python3 app.py
 ```
