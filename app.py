@@ -296,6 +296,7 @@ def testClassic():
         alert("检验是否满足古典假定");
       }
     </script>"""
+    print(hausmantest(session))
     html = """
             <!DOCTYPE html>
                 <html lang="zh">
@@ -303,19 +304,6 @@ def testClassic():
                     <meta charset="UTF-8" />
                         {}
                     <title>Test Hypothesis</title>
-                    <style type="text/css">
-      table {
-        border-right: 1px solid #804040;
-        border-bottom: 1px solid #804040;
-        border-collapse: collapse;
-        width: 50%;
-      }
-
-      table td {
-        border-left: 1px solid #804040;
-        border-top: 1px solid #804040;
-      }
-    </style>"""+"""
                   </head>
                   <body>
                     <button onclick="help()">help</button>
