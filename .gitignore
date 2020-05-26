@@ -7,4 +7,5 @@ test.py
 ./static/dcy
 __pycache__
 sourceCode/tk
+.vscode
 static/dcy
