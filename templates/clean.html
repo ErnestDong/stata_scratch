@@ -1,23 +1,27 @@
 <html>
-<head>
+  <head>
     <title>View and Choose</title>
     <script>
-        function help() {
-            alert("You can choose what to do with null value of your data");
-        }
+      function help() {
+        alert("选择处理方式、自变量与因变量");
+      }
     </script>
     <style>
-        td{
-            white-space: nowrap;
-        }
+      td {
+        white-space: nowrap;
+      }
     </style>
-</head>
-<body>
-<h1>Your Data</h1>
-<form action="/result" method="post">
-    {{ command|safe }}
-    <input type="submit"/>
-</form>
-<button onclick="help()">help</button>
-</body>
+  </head>
+  <body>
+    <h1>请选择</h1>
+    <form action="/result" method="post">
+      {{ command|safe }}<br />
+      <input
+        type="submit"
+        value="next"
+        style="width: 10%; height: 40px; font-size: 16px; color: #000000;"
+      />
+    </form>
+    <button onclick="help()">help</button>
+  </body>
 </html>

@@ -1,15 +1,41 @@
 <html>
   <head>
     <title>View and Choose</title>
-      <script>{{check|safe}}</script>
+    <script>
+      {
+        {
+          check | safe;
+        }
+      }
+      function help() {
+        alert("选择处理缺失值的方式：去除缺失值还是替换为0");
+      }
+    </script>
+    <style type="text/css">
+      .th {
+        background-color: aliceblue;
+      }
+    </style>
   </head>
-  <body>
-    <h1>Your Data</h1>
+  <body bgcolor="white">
+    <h1 align="middle" style="margin-top: 30px;">Data Preview</h1>
     {{file|safe}}
-    <form action="/upload" method="post">
-        <input type="radio" name="isnull" value="drop" checked="checked">drop null value<br>
-        <input type="radio" name="isnull" value="replace">replace null with 0<br>
-      <input type="submit" />
-    </form>
+    <div>
+      <form action="/upload" method="post">
+        <input type="radio" name="isnull" value="drop" checked="checked" />drop
+        null value<br />
+        <input type="radio" name="isnull" value="replace" />replace null with
+        0<br />
+        <input
+          type="submit"
+          value="next"
+          style="width: 10%; height: 40px; font-size: 16px; color: #000000;"
+        />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button
+          onclick="help()"
+        >
+          help
+        </button>
+      </form>
+    </div>
   </body>
 </html>
