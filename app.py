@@ -283,18 +283,27 @@ def show():
 @app.route("/classic")
 def testClassic():
     # 检验假定：无共线性、同方差、内生性
+    script = """<script>
+      function help() {
+        alert("检验是否满足古典假定");
+      }
+    </script>"""
     html = """
             <!DOCTYPE html>
-            <html lang="zh">
-              <head>
-                <meta charset="UTF-8" />
-                <title>Test Hypothesis</title>
-              </head>
-              <body>
-                {}{}{}
-              </body>
-            </html>
-        """.format(auxiliary_regression(session), whitetest(session),
+                <html lang="zh">
+                  <head>
+                    <meta charset="UTF-8" />
+                        {}
+                    <title>Test Hypothesis</title>
+                  </head>
+                  <body>
+                    <button onclick="help()">help</button>
+                    <center><img src="./static/pic/classic.jpg" height="300px" /></center>
+                    <br />
+                    {}{}{}
+                  </body>
+                </html>
+        """.format(script,auxiliary_regression(session), whitetest(session),
                    hausmantest(session))
     return html
 

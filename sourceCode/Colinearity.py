@@ -15,7 +15,7 @@ def auxiliary_regression(session: dict):
     f_1 = scipy.stats.f.ppf(0.99, len(X) - 1, observation - len(X))
     f_5 = scipy.stats.f.ppf(0.95, len(X) - 1, observation - len(X))
     f_10 = scipy.stats.f.ppf(0.90, len(X) - 1, observation - len(X))
-    html = """<h2>Colinearity Test</h2><table border='1'><tr><th>variable</th><th>R-square</th><th>VIF</th><th>F-value</th></tr>"""
+    html = """<center><h2>Colinearity Test</h2><table border='1'><tr><th>variable</th><th>R-square</th><th>VIF</th><th>F-value</th></tr>"""
     for i in range(len(X)):
         temp_y = X[i]
         X.pop(i)
@@ -34,7 +34,7 @@ def auxiliary_regression(session: dict):
         html += "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
             independent[i], R2, VIF, F)
         X.insert(i, temp_y)
-    return html + "</table>"
+    return html + "</table></center>"
 
 
 if __name__ == '__main__':

@@ -37,7 +37,7 @@ def whitetest(session: dict):
     if pvalue > chi3:
         return "<h2>White Test</h2><p>chi2({})={}*</p><p>90% heteroscedasticity</p>".format(
             len(coef), chi)
-    return "<h2>White Test</h2><p>chi({})={}</p>".format(len(coef), chi)
+    return "<center><h2>White Test</h2><p>chi({})={}</p></center>".format(len(coef), chi)
 
 
 if __name__ == '__main__':
