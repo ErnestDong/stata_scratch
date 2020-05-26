@@ -1,19 +1,38 @@
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-    <meta charset="UTF-8"/>
+  <head>
+    <meta charset="UTF-8" />
     <title>Upload</title>
     <script>
-        function help() {
-            alert("You can upload your csv file now");
-        }
+      function help() {
+        alert("在这一页可以上传你的csv数据");
+      }
     </script>
-</head>
-<body>
-<form action="" method="post" enctype="multipart/form-data">
-    <input type="file" name="file"/>
-    <input type="submit" value="upload"/>
-</form>
-<button onclick="help()">help</button>
-</body>
+  </head>
+  <body>
+    <h1 align="middle">上传数据页面</h1>
+
+    <div>
+      <div style="width: 50%; float: left;">
+        <img src="./static/pic/upload.jpeg" /><br />
+        <button onclick="help()">帮助</button>
+      </div>
+      <div style="width: 50%; float: right;">
+        <form action="" method="post" enctype="multipart/form-data">
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <input type="file" name="file" /><br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <input type="submit" value="upload" />
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
