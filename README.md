@@ -24,6 +24,8 @@
 
 开发环境：
 
+os: macOS 10.15.4
+
 - python 3.7.7
 - flask 1.0.2
 - matplotlib 3.2.1

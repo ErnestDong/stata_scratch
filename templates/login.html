@@ -2,21 +2,111 @@
   <head>
     <title>Login</title>
     <script>
-      {{script|safe}}
+      {
+        {
+          script | safe;
+        }
+      }
     </script>
-      <script>
-          function help() {
-              alert("This is a login page.");
-          }
-      </script>
+    <script>
+      function help() {
+        alert("请输入用户名与密码");
+      }
+    </script>
   </head>
   <body>
-    <form action="/" method="post">
-        username: <input type=text name="username"><br>
-        password: <input type=password name="passwd"><br>
-      <input type="submit" /><br>
-    </form>
-    <a href="./static/re.html">Register now</a>
-  <button onclick="help()">help</button>
+    <!-- logo -->
+    <br />
+    <div style="width: 90%; margin: 0px 0px 0px 100px; text-align: left;">
+      <img src="./static/logo.png" style="width: 10%;" />
+      <span style="font-size: 50px;">EconoMagics</span>
+    </div>
+    <div
+      style="
+        width: 100%;
+        min-height: 360px;
+        float: right;
+        background: transparent none left 10px no-repeat;
+        background-size: auto;
+        margin: 0px 20px 20px 20px;
+      "
+    >
+      <!-- pic -->
+      <div
+        style="
+          height: 400px;
+          width: 40%;
+          margin: 50px 0px 50px 150px;
+          float: left;
+        "
+      >
+        <img src="./static/pic/log.jpg" style="width: 80%;" />
+      </div>
+      <!-- form -->
+      <div
+        style="
+          width: 40%;
+          margin: 30px 50px 20px 0px;
+          display: block;
+          text-align: left;
+          float: right;
+        "
+      >
+        <br /><br /><br /><br /><br />
+        <form action="/" method="post">
+          <input
+            type="text"
+            name="username"
+            placeholder="用户名"
+            style="
+              width: 60%;
+              box-sizing: border-box;
+              height: 40px;
+              padding: 5px;
+              font-size: 16px;
+              color: #b7b7b9;
+              color: #000;
+              vertical-align: middle;
+              ime-mode: disabled;
+              border: solid 1px #ccc;
+              border-radius: 0px;
+            "
+          /><br /><br />
+          <input
+            type="password"
+            name="passwd"
+            style="
+              width: 60%;
+              box-sizing: border-box;
+              height: 40px;
+              _height: 37px;
+              _line-height: 26px;
+              padding: 5px;
+              font-size: 16px;
+              color: #b7b7b9;
+              color: #000;
+              vertical-align: middle;
+              ime-mode: disabled;
+              border: solid 1px #ccc;
+              border-radius: 0px;
+            "
+            placeholder="密码"
+          /><br /><br />
+          <input
+            type="submit"
+            value="登陆"
+            style="
+              width: 60%;
+              background-color: #9b0000;
+              height: 40px;
+              font-size: 16px;
+              color: #ffffff;
+            "
+          /><br />
+        </form>
+        <a href="./static/re.html">Register now</a>
+      </div>
+    </div>
+    <button onclick="help()">help</button>
   </body>
 </html>
