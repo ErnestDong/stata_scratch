@@ -24,7 +24,7 @@ commandList = [
     "linear_reg", "exp_reg_model", "log_lin_model", "lin_log_model", "logit",
     "probit"
 ]
-session = {"error":""}
+session = {"error": ""}
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -149,12 +149,16 @@ def showResult():
             data = data.dropna()
         else:
             data = data.fillna(0)
-        commandStr = "<h2>协方差矩阵为</h2>" + get_corr(data)
+        commandStr = "<h2 align=\"center\">协方差矩阵</h2>" + get_corr(data)
         data.to_csv(filename, encoding="utf-8")
         commandStr += """<div
         style="
           height: 400px;
-          width: 40%;
+          width: 8%;
+          float: left;"></div><div
+        style="
+          height: 400px;
+          width: 28%;
           float: left;"><h2>请选择处理方法</h2>
         """
         title = list(data.columns)
@@ -164,7 +168,7 @@ def showResult():
         commandStr += """</div><div
         style="
           height: 400px;
-          width: 30%;
+          width: 28%;
           float: left;
         "
       ><h2>请选择因变量</h2>"""
@@ -173,7 +177,7 @@ def showResult():
                 i, i)
         commandStr += """</div><div
         style="
-          width: 30%;
+          width: 28%;
           display: block;
           text-align: left;
           float: right;
@@ -182,7 +186,11 @@ def showResult():
         for i in title:
             commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(
                 i, i)
-        commandStr += "</div><br><a href=./browse target=\"_blank\">view data</a>"
+        commandStr += """</div><div
+        style="
+          height: 400px;
+          width: 8%;
+          float: left;"></div><br><br>"""
         return render_template("clean.html", command=commandStr)
     except ValueError:
         return redirect("VE")
@@ -214,15 +222,19 @@ def show():
         figure = eval(tmp + ".showFigure({})".format(ans))
         img = ""
         for i in figure:
-            img += """<h3>{}</h3><div><img src="{}"/><br/>
+            img += """<h3>{}</h3><div><img src="{}"/><br/></div>
                  """.format(i, figure[i])
         data = pd.read_csv(filename)
         commandStr = """<div>
     <form action="/result" method="post">
+    <div
+                style="
+                  width: 8%;
+                  float: left;
+                  height: 400px;"></div>
       <div
                 style="
-                  height: 400px;
-                  width: 40%;
+                  width: 28%;
                   float: left;"><h2>请选择处理方法</h2>
                 """
         title = list(data.columns)
@@ -231,8 +243,7 @@ def show():
                 i, i)
         commandStr += """</div><div
                 style="
-                  height: 400px;
-                  width: 30%;
+                  width: 28%;
                   float: left;
                 "
               ><h2>请选择因变量</h2>"""
@@ -241,21 +252,20 @@ def show():
                 i, i)
         commandStr += """</div><div
                 style="
-                  width: 30%;
+                  width: 28%;
                   display: block;
                   text-align: left;
-                  float: right;
+                  float: left;
                 "
               ><h2>请选择自变量</h2>"""
         for i in title:
             commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(
                 i, i)
-        commandStr += """</div><br><a href=./browse target=\"_blank\">view data</a><br />
-      <input
-        type="submit"
-        value="next"
-      />
-    </form></div><br>"""
+        commandStr += """ </div><div
+                style="
+                  width: 8%;
+                  float: left;height: 400px;"></div><br><br/><input type="submit" value="next"/>
+        </form></div><br>"""
         session["ans"] = ans
         return """<html>
                     <head>
@@ -263,18 +273,19 @@ def show():
                     </head>
                     <body>
                     <a href="/classic" target="_blank">test hypothesis</a>
+                    <center>
                         <h1>结果</h1>
                         <p>{}</p>
                         <a href="/datainfo">Click to Download the Result</a>
                         <div>{}</div>
                         {}
-                        <a href="./check">preview again</a>
-                        <a href="./static/{}/uploads/{}">download your raw data</a>
-                        <a href="./browse" target="_blank">view data</a>
+                        <a href="./check">preview again</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="{}">download your raw data</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="./browse" target="_blank">view data</a></center>
                         {}<br>
                     </body>
                     </html>
-                """.format(gdnfile, img, content, name, filename, commandStr)
+                """.format(gdnfile, img, content, filename, commandStr)
     except:
         session["error"] = "please check your data"
         return redirect("error")
@@ -303,7 +314,7 @@ def testClassic():
                     {}{}{}
                   </body>
                 </html>
-        """.format(script,auxiliary_regression(session), whitetest(session),
+        """.format(script, auxiliary_regression(session), whitetest(session),
                    hausmantest(session))
     return html
 

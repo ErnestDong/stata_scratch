@@ -11,7 +11,7 @@ import scipy
 
 def gethtml(lst: list):
     lenth = len(lst)
-    html = "<table border='1' style=\"margin: auto;\"><tr>"
+    html = "<table><tr>"
     for line in range(lenth):
         if line == 0:
             tmp = lst[line].split(',')
@@ -60,7 +60,7 @@ def get_corr(data: pd):
     #         else:
     #             ans+="<td bgcolor='#{}'>{}</td>".format(colorize(j),str(j))
     #     ans+="</tr>"
-    return "<img src=\"{}\"><br>".format(imd)  # ans+"</table>"
+    return "<center><img src=\"{}\"><br></center>".format(imd)  # ans+"</table>"
 
 
 def create_b_figure(ans: dict) -> str:

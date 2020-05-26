@@ -13,8 +13,9 @@
     </style>
   </head>
   <body>
-    <h1 align="middle">请选择</h1>
+    <button onclick="help()">help</button>
     <div>
+        <br><br><br>
     <form action="/result" method="post">
       {{ command|safe }}<br />
       <input
@@ -22,6 +23,6 @@
         value="next"
       />
     </form></div><br>
-    <button onclick="help()">help</button>
+    <a href=./browse target="_blank">view data</a>
   </body>
 </html>

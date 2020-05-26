@@ -10,32 +10,21 @@
     </script>
   </head>
   <body>
-    <h1 align="middle">上传数据页面</h1>
-
-    <div>
-      <div style="width: 50%; float: left;">
-        <img src="../static/pic/upload.jpeg" /><br />
-        <button onclick="help()">help</button>
-      </div>
-      <div style="width: 50%; float: right;">
+    <button onclick="help()">help</button>
+    <br><br><br><br><br><br><br><br>
+    <center><img src = "./static/pic/upload.jpeg" width="60%"></center>
+    <div><center>
         <form action="" method="post" enctype="multipart/form-data">
           <br />
           <br />
-          <br />
-          <br />
-          <br />
-          <input type="file" name="file" /><br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
+          <input type="file" name="file"/><br />
+          <p align="middle" style="font-size: 24px;">本页面只可以接受格式为csv的数据，允许存在空值</p>
           <input
             type="submit"
             value="upload"
             style="width: 80px; height: 40px; font-size: 16px; color: #000000;"
           />
-        </form>
+        </form></center>
       </div>
     </div>
   </body>
