@@ -1,62 +1,153 @@
 <html>
-<head>
+  <head>
     <title>Register</title>
     <script type="text/javascript">
-        function checkpassword() {
-            var password = document.getElementById("pw").value;
-            var repassword = document.getElementById("repw").value;
-            if (password == repassword) {
-                if (password.includes("\\") || password.includes("\"") || password.includes("\'")) {
-                    document.getElementById("txt1").innerHTML = "password is illegal";
-                    document.getElementById("submit").disabled = true;
-                } else {
-                    document.getElementById("txt1").innerHTML = "";
-                    document.getElementById("submit").disabled = false;
-                }
+      function checkpassword() {
+        var password = document.getElementById("pw").value;
+        var repassword = document.getElementById("repw").value;
+        if (password == repassword) {
+          if (
+            password.includes("\\") ||
+            password.includes('"') ||
+            password.includes("'")
+          ) {
+            document.getElementById("txt1").innerHTML = "password is illegal";
+            document.getElementById("submit").disabled = true;
+          } else {
+            document.getElementById("txt1").innerHTML = "";
+            document.getElementById("submit").disabled = false;
+          }
+        } else {
+          document.getElementById("txt1").innerHTML =
+            "please check your password";
+          document.getElementById("submit").disabled = true;
+        }
+      }
 
-            } else {
-                document.getElementById("txt1").innerHTML = "please check your password";
-                document.getElementById("submit").disabled = true;
-            }
+      function checkname() {
+        var username = document.getElementById("nm").value;
+        if (
+          username.includes("\\") ||
+          username.includes('"') ||
+          username.includes("'")
+        ) {
+          document.getElementById("txt1").innerHTML = "username is illegal";
+          document.getElementById("submit").disabled = true;
+        } else {
+          document.getElementById("txt2").innerHTML = "";
+          document.getElementById("submit").disabled = false;
         }
+      }
 
-        function checkname() {
-            var username = document.getElementById("nm").value;
-            if (username.includes("\\") || username.includes("\"") || username.includes("\'")) {
-                document.getElementById("txt1").innerHTML = "username is illegal";
-                document.getElementById("submit").disabled = true;
-            } else {
-                document.getElementById("txt2").innerHTML = "";
-                document.getElementById("submit").disabled = false;
-            }
+      function isNull() {
+        var name = document.getElementById("nm").value;
+        if (name.length == 0) {
+          confirm("Empty username!");
+          return false;
         }
-
-        function isNull() {
-            var name = document.getElementById("nm").value;
-            if (name.length == 0) {
-                confirm("Empty username!");
-                return false;
-            }
-            var pass = document.getElementById("pw");
-            if (pass.length == 0) {
-                confirm("Empty password!");
-                return false;
-            }
-            return true;
+        var pass = document.getElementById("pw");
+        if (pass.length == 0) {
+          confirm("Empty password!");
+          return false;
         }
-        function help() {
-            alert("Please register now.");
-        }
+        return true;
+      }
+      function help() {
+        alert("Please register now.");
+      }
     </script>
-</head>
-<body>
-<form action="/" method="post" onsubmit="return isNull()">
-    username: <input type=text id="nm" name="addUser" onkeyup="checkname()"><span id="txt1"></span><br>
-    password: <input type=password id="pw" name="addpwd"><br>
-    password: <input type="password" id="repw" onkeyup="checkpassword()"><span id="txt2"></span><br>
+    <style type="text/css">
+      .passwd {
+        width: 60%;
+        box-sizing: border-box;
+        height: 40px;
+        padding: 5px;
+        font-size: 16px;
+        color: #b7b7b9;
+        color: #000;
+        vertical-align: middle;
+        ime-mode: disabled;
+        border: solid 1px #ccc;
+        border-radius: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <div style="width: 90%; margin: 40px 0px 0px 120px; text-align: left;">
+      <img src="./static/logo.png" style="height: 10%; float: left;" />
+      <img src="./static/pic/econ.jpg" style="height: 10%; float: left;" />
+      <span style="font-size: 50px;"></span>
+    </div>
+    <div
+      style="
+        width: 100%;
+        min-height: 360px;
+        float: right;
+        background: transparent none left 10px no-repeat;
+        background-size: auto;
+        margin: 0px 20px 20px 20px;
+      "
+    >
+      <div
+        style="
+          height: 400px;
+          width: 40%;
+          margin: 50px 0px 50px 150px;
+          float: left;
+        "
+      >
+        <img src=".static//pic/login.jpg" style="width: 80%;" />
+      </div>
+      <div
+        style="
+          width: 40%;
+          margin: 30px 50px 20px 0px;
+          display: block;
+          text-align: left;
+          float: right;
+        "
+      >
+        <br /><br /><br /><br /><br />
+        <form action="/" method="post" onsubmit="return isNull()">
+          <input
+            class="passwd"
+            placeholder="用户名"
+            type="text"
+            id="nm"
+            name="addUser"
+            onkeyup="checkname()"
+          /><span id="txt1"></span><br />
+          <input
+            type="password"
+            id="pw"
+            name="addpwd"
+            class="passwd"
+            placeholder="密码"
+          /><br />
+          <input
+            type="password"
+            id="repw"
+            placeholder="再次输入密码"
+            onkeyup="checkpassword()"
+            class="passwd"
+          /><span id="txt2"></span><br />
 
-    <input type="submit" id="submit"/>
-</form>
-<button onclick="help()">help</button>
-</body>
+          <input
+            type="submit"
+            id="submit"
+            value="注册"
+            style="
+              width: 60%;
+              background-color: #9b0000;
+              height: 40px;
+              font-size: 16px;
+              color: #ffffff;
+            "
+          />
+        </form>
+        <button onclick="help()">help</button>
+      </div>
+    </div>
+  </body>
 </html>
