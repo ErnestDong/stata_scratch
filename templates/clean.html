@@ -13,15 +13,15 @@
     </style>
   </head>
   <body>
-    <h1>请选择</h1>
+    <h1 align="middle">请选择</h1>
+    <div>
     <form action="/result" method="post">
       {{ command|safe }}<br />
       <input
         type="submit"
         value="next"
-        style="width: 10%; height: 40px; font-size: 16px; color: #000000;"
       />
-    </form>
+    </form></div><br>
     <button onclick="help()">help</button>
   </body>
 </html>

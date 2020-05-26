@@ -28,36 +28,38 @@ def getAns(dependent: str, independent: list, session: dict) -> dict:
         ans["var"] = [dependent, "Constant"] + independent
         n = len(ys)
         k = len(independent) + 1
-        ans["coefficient"] = np.append(reg.intercept_, reg.coef_).tolist()
-        ans["R-squared"] = reg.score(xs, ys)
-        ans["Adjusted R-squared"] = 1 - (1 - ans["R-squared"]) * (n - 1) / (n -
-                                                                            k)
+        tmp = np.append(reg.intercept_, reg.coef_).tolist()
+        ans["coefficient"] = [np.round(i, 4) for i in tmp]
+        ans["R-squared"] = np.round(reg.score(xs, ys), 4)
+        ans["Adjusted R-squared"] = np.round(1 - (1 - ans["R-squared"]) * (n - 1) / (n -
+                                                                                     k), 4)
         try:
-            ans["F-value"] = ans["R-squared"] / (1 - ans["R-squared"]) * (
-                n - k) / (k - 1)
+            ans["F-value"] = np.round(ans["R-squared"] / (1 - ans["R-squared"]) * (
+                    n - k) / (k - 1), 4)
         except ZeroDivisionError:
-            ans["F-value"] = 9999999999999999
+            ans["F-value"] = 999999
         ans["SS"] = {}
-        tmp = sum((ys - ys.mean())**2)
+        tmp = sum((ys - ys.mean()) ** 2)
         ans["observation"] = n
         ans["df"] = k
-        ans["SS"]["ESS"] = tmp * ans["R-squared"]
-        ans["SS"]["RSS"] = tmp - ans["SS"]["ESS"]
-        ans["Prob>F"] = scipy.stats.f.sf(ans["F-value"], k - 1, n - k)
-        ans["Root MSE"] = (ans["SS"]["RSS"] / (n - k))**0.5
+        ans["SS"]["ESS"] = np.round(tmp * ans["R-squared"], 4)
+        ans["SS"]["RSS"] = np.round(tmp - ans["SS"]["ESS"], 4)
+        ans["Prob>F"] = np.round(scipy.stats.f.sf(ans["F-value"], k - 1, n - k), 4)
+        ans["Root MSE"] = np.round((ans["SS"]["RSS"] / (n - k)) ** 0.5, 4)
         sigma_square = ans["SS"]["RSS"] / (n - k)
         one = np.ones(n)
         xs = np.insert(xs, 0, values=one, axis=1)
         tmp = np.dot(xs.T, xs)
         var_cov_beta = sigma_square * np.linalg.inv(tmp)
-        ans["stderr"] = np.sqrt(var_cov_beta.diagonal()).tolist()
+        tmp = np.sqrt(var_cov_beta.diagonal()).tolist()
+        ans["stderr"] = [np.round(i, 4) for i in tmp]
         try:
             ans["t"] = [
-                ans["coefficient"][i] / ans["stderr"][i] for i in range(k)
+                np.round(ans["coefficient"][i] / ans["stderr"][i], 4) for i in range(k)
             ]
         except ZeroDivisionError:
             ans["t"] = 9999999
-        ans["P>|t|"] = [scipy.stats.t.sf(i, n - k) for i in ans["t"]]
+        ans["P>|t|"] = [np.round(scipy.stats.t.sf(i, n - k), 4) for i in ans["t"]]
         ans["flag"] = 1
         return ans
     except:
@@ -120,13 +122,13 @@ def showAns(dependent: str, ans: dict, session: dict) -> str:
         </table>
         """.format(
             format_(ans["SS"]["ESS"]), format_(ans["df"] - 1),
-            format_(ans["SS"]["ESS"] / (ans["df"] - 1)),
+            format_(np.round(ans["SS"]["ESS"] / (ans["df"] - 1),4)),
             format_(ans["SS"]["RSS"]), format_(ans["observation"] - ans["df"]),
-            format_(ans["SS"]["RSS"] / (ans["observation"] - ans["df"])),
+            format_(np.round(ans["SS"]["RSS"] / (ans["observation"] - ans["df"]),4)),
             format_(ans["SS"]["ESS"] + ans["SS"]["RSS"]),
             format_(ans["observation"] - 1),
-            format_((ans["SS"]["ESS"] + ans["SS"]["RSS"]) /
-                    (ans["observation"] - 1)))
+            format_(np.round((ans["SS"]["ESS"] + ans["SS"]["RSS"]) /
+                    (ans["observation"] - 1),4)))
         html += """
         <table style="width: 600px;">
           <tr>

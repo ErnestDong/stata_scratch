@@ -18,9 +18,11 @@
     </style>
   </head>
   <body bgcolor="white">
-    <h1 align="middle" style="margin-top: 30px;">Data Preview</h1>
-    {{file|safe}}
+    <!-- <h1 align="middle" style="margin-top: 30px;">Data Preview</h1> -->
+    <h1 align="middle">预览数据</h1>
+    <div style="text-align: center;">{{file|safe}}</div>
     <div>
+
       <form action="/upload" method="post">
         <input type="radio" name="isnull" value="drop" checked="checked" />drop
         null value<br />
@@ -30,10 +32,9 @@
           type="submit"
           value="next"
           style="width: 10%; height: 40px; font-size: 16px; color: #000000;"
-        />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button
-          onclick="help()"
-        >
-          help
+        />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button
+          onclick="help()" > help
         </button>
       </form>
     </div>

@@ -11,7 +11,7 @@ import scipy
 
 def gethtml(lst: list):
     lenth = len(lst)
-    html = "<table border='1'><tr>"
+    html = "<table border='1' style=\"margin: auto;\"><tr>"
     for line in range(lenth):
         if line == 0:
             tmp = lst[line].split(',')
