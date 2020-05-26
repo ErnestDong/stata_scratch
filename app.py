@@ -229,12 +229,12 @@ def show():
     <form action="/result" method="post">
     <div
                 style="
-                  width: 8%;
+                  width: 19%;
                   float: left;
                   height: 400px;"></div>
       <div
                 style="
-                  width: 28%;
+                  width: 27%;
                   float: left;"><h2>请选择处理方法</h2>
                 """
         title = list(data.columns)
@@ -243,7 +243,7 @@ def show():
                 i, i)
         commandStr += """</div><div
                 style="
-                  width: 28%;
+                  width: 27%;
                   float: left;
                 "
               ><h2>请选择因变量</h2>"""
@@ -252,7 +252,7 @@ def show():
                 i, i)
         commandStr += """</div><div
                 style="
-                  width: 28%;
+                  width: 27%;
                   display: block;
                   text-align: left;
                   float: left;
@@ -261,10 +261,7 @@ def show():
         for i in title:
             commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(
                 i, i)
-        commandStr += """ </div><div
-                style="
-                  width: 8%;
-                  float: left;height: 400px;"></div><br><br/><input type="submit" value="next"/>
+        commandStr += """ </div><br><br/><center><input type="submit" value="next" style="height: 40px; font-size: 24px; color: #000000;"/></center>
         </form></div><br>"""
         session["ans"] = ans
         return """<html>
@@ -306,6 +303,19 @@ def testClassic():
                     <meta charset="UTF-8" />
                         {}
                     <title>Test Hypothesis</title>
+                    <style type="text/css">
+      table {
+        border-right: 1px solid #804040;
+        border-bottom: 1px solid #804040;
+        border-collapse: collapse;
+        width: 50%;
+      }
+
+      table td {
+        border-left: 1px solid #804040;
+        border-top: 1px solid #804040;
+      }
+    </style>"""+"""
                   </head>
                   <body>
                     <button onclick="help()">help</button>
