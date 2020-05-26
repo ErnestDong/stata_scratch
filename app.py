@@ -231,7 +231,7 @@ def show():
                 style="
                   width: 19%;
                   float: left;
-                  height: 400px;"></div>
+                  height: 4px;"></div>
       <div
                 style="
                   width: 27%;
