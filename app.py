@@ -151,46 +151,49 @@ def showResult():
             data = data.fillna(0)
         commandStr = "<h2 align=\"center\">协方差矩阵</h2>" + get_corr(data)
         data.to_csv(filename, encoding="utf-8")
-        commandStr += """<div
-        style="
-          height: 400px;
-          width: 8%;
-          float: left;"></div><div
-        style="
-          height: 400px;
-          width: 28%;
-          float: left;"><h2>请选择处理方法</h2>
+        commandStr += """
+        <div
+            style="
+              height: 400px;
+              width: 8%;
+              float: left;"></div><div
+            style="
+              height: 400px;
+              width: 28%;
+              float: left;">
+            <h2>请选择处理方法</h2>
         """
         title = list(data.columns)
         for i in commandList:
             commandStr += "<input type='radio' value='{}' name='command'>{}<br>".format(
                 i, i)
-        commandStr += """</div><div
-        style="
-          height: 400px;
-          width: 28%;
-          float: left;
-        "
-      ><h2>请选择因变量</h2>"""
+        commandStr += """</div>
+        <div
+            style="
+              height: 400px;
+              width: 28%;
+              float: left;">
+            <h2>请选择因变量</h2>"""
         for i in title:
             commandStr += "<input type='radio' value='{}' name='dependent'>{}<br>".format(
                 i, i)
-        commandStr += """</div><div
-        style="
-          width: 28%;
-          display: block;
-          text-align: left;
-          float: right;
-        "
-      ><h2>请选择自变量</h2>"""
+        commandStr += """</div>
+        <div
+            style="
+              width: 28%;
+              display: block;
+              text-align: left;
+              float: right;">
+            <h2>请选择自变量</h2>"""
         for i in title:
             commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(
                 i, i)
-        commandStr += """</div><div
-        style="
-          height: 400px;
-          width: 8%;
-          float: left;"></div><br><br>"""
+        commandStr += """</div>
+        <div
+            style="
+              height: 400px;
+              width: 8%;
+              float: left;"></div><br><br>"""
         return render_template("clean.html", command=commandStr)
     except ValueError:
         return redirect("VE")
@@ -227,41 +230,39 @@ def show():
         data = pd.read_csv(filename)
         commandStr = """<div>
     <form action="/result" method="post">
-    <div
-                style="
-                  width: 19%;
-                  float: left;
-                  height: 4px;"></div>
-      <div
-                style="
-                  width: 27%;
-                  float: left;"><h2>请选择处理方法</h2>
+        <div style="
+                width: 19%;
+                float: left;
+                height: 4px;"></div>
+        <div style="
+                width: 27%;
+                float: left;">
+                <h2>请选择处理方法</h2>
                 """
         title = list(data.columns)
         for i in commandList:
             commandStr += "<input type='radio' value='{}' name='command'>{}<br>".format(
                 i, i)
-        commandStr += """</div><div
-                style="
-                  width: 27%;
-                  float: left;
-                "
-              ><h2>请选择因变量</h2>"""
+        commandStr += """</div>
+        <div style="
+            width: 27%;
+            float: left;">
+        <h2>请选择因变量</h2>"""
         for i in title:
             commandStr += "<input type='radio' value='{}' name='dependent'>{}<br>".format(
                 i, i)
-        commandStr += """</div><div
-                style="
-                  width: 27%;
-                  display: block;
-                  text-align: left;
-                  float: left;
-                "
-              ><h2>请选择自变量</h2>"""
+        commandStr += """</div>
+        <div style="
+                width: 27%;
+                display: block;
+                text-align: left;
+                float: left;">
+            <h2>请选择自变量</h2>"""
         for i in title:
             commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(
                 i, i)
-        commandStr += """ </div><br><br/><center><input type="submit" value="next" style="height: 40px; font-size: 24px; color: #000000;"/></center>
+        commandStr += """ </div><br /><br/>
+            <center><input type="submit" value="next" style="height: 40px; font-size: 24px; color: #000000;"/></center>
         </form></div><br>"""
         session["ans"] = ans
         return """<html>

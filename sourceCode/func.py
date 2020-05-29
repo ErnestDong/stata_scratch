@@ -60,7 +60,8 @@ def get_corr(data: pd):
     #         else:
     #             ans+="<td bgcolor='#{}'>{}</td>".format(colorize(j),str(j))
     #     ans+="</tr>"
-    return "<center><img src=\"{}\"><br></center>".format(imd)  # ans+"</table>"
+    return "<center><img src=\"{}\"><br></center>".format(
+        imd)  # ans+"</table>"
 
 
 def create_b_figure(ans: dict) -> str:
