@@ -26,13 +26,14 @@
 
 os: macOS 10.15.4
 
-- python 3.7.7
-- flask 1.0.2
-- matplotlib 3.2.1
-- numpy 1.18.1
-- pandas 1.0.3
-- scipy 1.4.1
-- statsmodels 0.11.1
+- python 3.7.7 or python 3.8.3
+- flask 1.0.2，用于搭建网页后端
+- matplotlib 3.2.1，用于作图
+- numpy 1.18.1，用于数据处理
+- pandas 1.0.3，用于数据处理
+- scipy 1.4.1，用于数据处理
+- statsmodels 0.11.1，用于数据处理
+- seaborn 0.10.1，用于数据处理
 
 ### 执行
 
