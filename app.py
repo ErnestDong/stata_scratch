@@ -47,10 +47,12 @@ def passwd():
                 pickle.dump(data, f)
         if name not in data:
             """if not registered"""
+            print(1)
             return render_template("login.html",
                                    script="alert('Not Registered!')")
         if data[name] != passwd:
             """if password is wrong"""
+            print(2)
             return render_template("login.html",
                                    script="alert('Wrong Password!')")
         """if all is well"""
@@ -103,7 +105,8 @@ def upload():
                                     'static/{}/uploads/'.format(name))
             file_name = upload_path + secure_filename(f.filename)
             if file_name[-4:] != ".csv":
-                return redirect("data")
+                session["error"] = "csv needed"
+                return redirect("error")
             session["filename"] = file_name
             f.save(file_name)
             return redirect("check")
@@ -195,8 +198,6 @@ def showResult():
               width: 8%;
               float: left;"></div><br><br>"""
         return render_template("clean.html", command=commandStr)
-    except ValueError:
-        return redirect("VE")
     except Exception:
         session["error"] = "please check your data"
         return redirect("error")
@@ -332,40 +333,22 @@ def forDownloads():
 def cerr():
     # 如果有错误，在本页提示错误类型
     html = """
-        <!DOCTYPE html>
-        <html lang="zh">
-          <head>
-            <meta charset="UTF-8" />
-            <title>Title</title>
-          </head>
-          <body>
-          <script>
-          alert({})
-          </script>
-            <a href="/check">return to check page</a>
-          </body>
-        </html>
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Error</title>
+  </head>
+    <script>
+      alert('{}');
+      </script>
+      <center>
+    An error occured. Please check again.<br>
+    <a href="/check">return to check page</a><br>
+    <img src="/static/pic/logo.png" style="height: 300px;" /></center>
+  </body>
+</html>
     """.format(session["error"])
-    return html
-
-
-@app.route("/VE")
-def valerr():
-    html = """
-        <!DOCTYPE html>
-        <html lang="zh">
-          <head>
-            <meta charset="UTF-8" />
-            <title>Title</title>
-          </head>
-          <body>
-          <script>
-          alert("Please Check Your Data Or Login")
-          </script>
-            <a href="/">return to login page</a>
-          </body>
-        </html>
-        """
     return html
 
 
@@ -382,7 +365,7 @@ def data_broser():
         <html lang="zh">
           <head>
             <meta charset="UTF-8" />
-            <title>Title</title>
+            <title>Browse</title>
           </head>
           <body>
             {}

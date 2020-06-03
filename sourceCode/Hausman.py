@@ -33,11 +33,11 @@ def hausmantest(session: dict):
         p_values.append(np.round(haus_reg2.pvalues.values[1], 4))
         params.append(np.round(haus_reg2.params.values[1], 4))
         X = list(independent)
-    html = """<h2>Hausman Test</h2><table border='1'><tr><th>variable</th><th>Coefficients</th><th>std err</th><th>t-value</th><th>p-value</th></tr>"""
+    html = """<center><h2>Hausman Test</h2><table border='1'><tr><th>variable</th><th>Coefficients</th><th>std err</th><th>t-value</th><th>p-value</th></tr>"""
     for i in range(len(independent)):
         html += "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
             X[i], params[i], sd_b[i], ts_b[i], p_values[i])
-    return html + "</table>"
+    return html + "</table></center>"
 
 
 if __name__ == '__main__':

@@ -35,6 +35,8 @@ os: macOS 10.15.4
 - statsmodels 0.11.1，用于数据处理
 - seaborn 0.10.1，用于数据处理
 
+测试浏览器：Firefox75.0/76.0/77.0，Safari13.1.1，Microsoft Edge83
+
 ### 执行
 
 ```python
