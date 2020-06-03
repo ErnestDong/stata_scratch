@@ -344,7 +344,7 @@ def cerr():
       </script>
       <center>
     An error occured. Please check again.<br>
-    <a href="/check">return to check page</a><br>
+    <a href="/">return to login page</a><br>
     <img src="/static/pic/logo.png" style="height: 300px;" /></center>
   </body>
 </html>
