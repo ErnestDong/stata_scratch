@@ -18,6 +18,7 @@ from sourceCode.Colinearity import auxiliary_regression
 from sourceCode.Hausman import hausmantest
 from sourceCode.White import whitetest
 from sourceCode.func import get_corr, gethtml
+from sourceCode.code import encode,decode
 
 app = Flask(__name__)
 commandList = [
@@ -46,11 +47,11 @@ def passwd():
         passwd = request.form["passwd"]
         try:
             with open("users_info.pickle", "rb") as f:
-                data = pickle.load(f)
+                data = decode(pickle.load(f))
         except FileNotFoundError:
             with open("users_info.pickle", "wb") as f:
                 data = {'admin': 'admin'}
-                pickle.dump(data, f)
+                pickle.dump(encode(data), f)
         if name not in data:
             """if not registered"""
             return render_template("login.html",
@@ -61,7 +62,6 @@ def passwd():
                                    script="alert('Wrong Password!')")
         """if all is well"""
         session["username"] = name
-        session["command"] = []
         if os.path.exists("./static/" + name):
             shutil.rmtree("./static/" + name)
         return redirect("data")
@@ -72,7 +72,7 @@ def passwd():
             name = request.form["addUser"]
             passwd = request.form["addpwd"]
             with open("users_info.pickle", "rb") as f:
-                data = pickle.load(f)
+                data = decode(pickle.load(f))
             if name in data:
                 """if username exists"""
                 return render_template(
@@ -80,7 +80,7 @@ def passwd():
                     script="alert('name is registered!Try another name.')")
             data[name] = passwd
             with open("users_info.pickle", "wb") as f:
-                pickle.dump(data, f)
+                pickle.dump(encode(data), f)
             return render_template("login.html", script="alert('registered!')")
         except:
             """if user just clicks the button"""
