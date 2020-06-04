@@ -2,11 +2,7 @@
   <head>
     <title>View and Choose</title>
     <script>
-      {
-        {
-          check | safe;
-        }
-      }
+      {{check|safe}}
       function help() {
         alert("选择处理缺失值的方式：去除缺失值还是替换为0");
       }
@@ -31,6 +27,7 @@
   </head>
   <body bgcolor="white">
     <button onclick="help()">help</button>
+    <br><a href="/">退出登录</a>
     <!-- <h1 align="middle" style="margin-top: 30px;">Data Preview</h1> -->
     <center><img src="./static/pic/preview.jpg" height="300px" /></center>
     <br />

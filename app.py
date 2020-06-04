@@ -33,6 +33,12 @@ def passwd():
     login page
     0.0.0.0/: 前往注册界面或上传界面。逻辑见数字
     """
+    # logout
+    global session
+    if "username" in session:
+        if os.path.exists("./static/" + session["username"]):
+            shutil.rmtree("./static/" + session["username"])
+    session = {"error": ""}
     try:
         # 2. 如果已经输入了账户密码，那么在这里检验用户是否已经注册，如果注册就前往/data目录
         """if redirected from /"""
@@ -47,12 +53,10 @@ def passwd():
                 pickle.dump(data, f)
         if name not in data:
             """if not registered"""
-            print(1)
             return render_template("login.html",
                                    script="alert('Not Registered!')")
         if data[name] != passwd:
             """if password is wrong"""
-            print(2)
             return render_template("login.html",
                                    script="alert('Wrong Password!')")
         """if all is well"""
@@ -92,28 +96,28 @@ def upload():
     jump to upload page to preview data and choose method
     """
     # 上传文件
-    try:
-        name = session["username"]
-        if not os.path.exists("./static/" + name):
-            os.mkdir("./static/" + name)
-            os.mkdir("./static/{}/uploads".format(name))
-            os.mkdir("./static/{}/downloads".format(name))
-        if request.method == 'POST':
-            f = request.files["file"]
-            base_path = path.abspath(path.dirname(__file__))
-            upload_path = path.join(base_path,
-                                    'static/{}/uploads/'.format(name))
-            file_name = upload_path + secure_filename(f.filename)
-            if file_name[-4:] != ".csv":
-                session["error"] = "csv needed"
-                return redirect("error")
-            session["filename"] = file_name
-            f.save(file_name)
-            return redirect("check")
-        return render_template('upload.html')
-    except Exception:
-        session["error"] = "please check your data"
-        return redirect("error")
+    # try:
+    name = session["username"]
+    if not os.path.exists("./static/" + name):
+        os.mkdir("./static/" + name)
+        os.mkdir("./static/{}/uploads".format(name))
+        os.mkdir("./static/{}/downloads".format(name))
+    if request.method == 'POST':
+        f = request.files["file"]
+        base_path = path.abspath(path.dirname(__file__))
+        upload_path = path.join(base_path,
+                                'static/{}/uploads/'.format(name))
+        file_name = upload_path + secure_filename(f.filename)
+        if file_name[-4:] != ".csv":
+            session["error"] = "csv needed"
+            return redirect("error")
+        session["filename"] = file_name
+        f.save(file_name)
+        return redirect("check")
+    return render_template('upload.html')
+    # except Exception:
+    #     session["error"] = "please check your data"
+    #     return redirect("error")
 
 
 @app.route("/check", methods=['GET', 'POST'])
@@ -271,7 +275,7 @@ def show():
                         <title>ans</title>
                     </head>
                     <body>
-                    <a href="/classic" target="_blank">test hypothesis</a>
+                    <a href="/classic" target="_blank">test hypothesis</a><br><a href="/">退出登录</a>
                     <center>
                         <h1>结果</h1>
                         <p>{}</p>
@@ -298,17 +302,23 @@ def testClassic():
         alert("检验是否满足古典假定");
       }
     </script>"""
-    print(hausmantest(session))
+    helpfunction="""    
+    <script>
+      function help() {
+        alert("检验古典假定是否被满足");
+      }
+    </script>"""
     html = """
             <!DOCTYPE html>
                 <html lang="zh">
                   <head>
                     <meta charset="UTF-8" />
                         {}
+                        
                     <title>Test Hypothesis</title>
                   </head>
                   <body>
-                    <button onclick="help()">help</button>
+                    <button onclick="help()">help</button><br><a href="/">退出登录</a>
                     <center><img src="./static/pic/classic.jpg" height="300px" /></center>
                     <br />
                     {}{}{}
