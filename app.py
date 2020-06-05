@@ -71,6 +71,14 @@ def passwd():
         try:
             name = request.form["addUser"]
             passwd = request.form["addpwd"]
+            legalstr = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890"
+            if name == "" or passwd == "":
+                return render_template("login.html",
+                                       script="alert('please check your name or password')")
+            for i in name + passwd:
+                if i not in legalstr:
+                    return render_template("login.html",
+                                           script="alert('name or password is illegal')")
             with open("users_info.pickle", "rb") as f:
                 data = decode(pickle.load(f))
             if name in data:
