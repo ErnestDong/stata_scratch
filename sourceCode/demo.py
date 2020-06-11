@@ -7,7 +7,7 @@ def showAns(dependent: str, ans: dict, session: dict) -> str:
     return "<center><p>Hello World!</h>"
 
 def showFigure(ans: dict) -> dict:
-    return {"demo.png":"/static/pic/demo.png"}
+    return {"demo.png":"/static/pic/demo.jpeg"}
 
 
 if __name__ == "__main__":
