@@ -208,13 +208,4 @@ def showFigure(ans: dict) -> dict:
 
 
 if __name__ == "__main__":
-    # a=np.array([[1,2],[3,4]])
-    # b=np.linalg.inv(a)
-    # print(np.dot(a,b))
-    print(getAns("open", ["amount", "low"], "dcy"))
-    # getAns("open", ["amount", "low"], "dcy")
-    # data=pd.read_csv("./sourceCode/tk/daily_Ashare.csv")
-    # reg('open',['high','low'],'dcy',data)
-    # print(type(np.ones(10)))
-    print(format_(str(1.1304568502168702e-07)))
-    # create_t_figure("open", ["amount", "low"], "dcy")
+    pass
