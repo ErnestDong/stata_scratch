@@ -138,13 +138,13 @@ def checkResult():
     try:
         # name = session["username"]
         filename = session["filename"]
-        uploadFile = open(filename, "r", encoding="GBK")
+        uploadFile = open(filename, "r", encoding="utf-8")
         fileinfo = uploadFile.readlines()[:20]
         fileinfo = gethtml(fileinfo)
         uploadFile.close()
         return render_template("show.html", file=fileinfo)
     except Exception:
-        session["error"] = "please check your data"
+        session["error"] = "utf-8 is required"
         return redirect("error")
 
 

@@ -144,7 +144,7 @@ def checkResult():
         uploadFile.close()
         return render_template("show.html", file=fileinfo)
     except Exception:
-        session["error"] = "please check your data"
+        session["error"] = "utf-8 is required"
         return redirect("error")
 
 
