@@ -138,7 +138,7 @@ def checkResult():
     try:
         # name = session["username"]
         filename = session["filename"]
-        uploadFile = open(filename, "r", encoding="utf-8")
+        uploadFile = open(filename, "r", encoding="GBK")
         fileinfo = uploadFile.readlines()[:20]
         fileinfo = gethtml(fileinfo)
         uploadFile.close()
