@@ -220,85 +220,89 @@ def show():
     """
     show the result
     """
-    name = session["username"]
-    filename = session["filename"]
-    tmp = request.form["command"]
-    dependentVariable = request.form["dependent"]
-    independentVariable = request.form.getlist("independent")
-    session["dependent"] = dependentVariable
-    session["independent"] = independentVariable
-    independentVariable[-1] = independentVariable[-1]
     try:
-        ans = eval(tmp + ".getAns('{}',{},{})".format(
-            dependentVariable, independentVariable, session))
-        gdnfile = eval(
-            tmp +
-            ".showAns('{}',{},{})".format(dependentVariable, ans, session))
-        content = "<br>"
-        figure = eval(tmp + ".showFigure({})".format(ans))
-        img = ""
-        for i in figure:
-            img += """<h3>{}</h3><div><img src="{}"/><br/></div>
-                 """.format(i, figure[i])
-        data = pd.read_csv(filename)
-        commandStr = """<div>
-    <form action="/result" method="post">
-        <div style="
-                width: 19%;
-                float: left;
-                height: 4px;"></div>
-        <div style="
+        name = session["username"]
+        filename = session["filename"]
+        tmp = request.form["command"]
+        dependentVariable = request.form["dependent"]
+        independentVariable = request.form.getlist("independent")
+        session["dependent"] = dependentVariable
+        session["independent"] = independentVariable
+        independentVariable[-1] = independentVariable[-1]
+        try:
+            ans = eval(tmp + ".getAns('{}',{},{})".format(
+                dependentVariable, independentVariable, session))
+            gdnfile = eval(
+                tmp +
+                ".showAns('{}',{},{})".format(dependentVariable, ans, session))
+            content = "<br>"
+            figure = eval(tmp + ".showFigure({})".format(ans))
+            img = ""
+            for i in figure:
+                img += """<h3>{}</h3><div><img src="{}"/><br/></div>
+                     """.format(i, figure[i])
+            data = pd.read_csv(filename)
+            commandStr = """<div>
+        <form action="/result" method="post">
+            <div style="
+                    width: 19%;
+                    float: left;
+                    height: 4px;"></div>
+            <div style="
+                    width: 27%;
+                    float: left;">
+                    <h2>请选择处理方法</h2>
+                    """
+            title = list(data.columns)
+            for i in commandList:
+                commandStr += "<input type='radio' value='{}' name='command'>{}<br>".format(
+                    i, i)
+            commandStr += """</div>
+            <div style="
                 width: 27%;
                 float: left;">
-                <h2>请选择处理方法</h2>
-                """
-        title = list(data.columns)
-        for i in commandList:
-            commandStr += "<input type='radio' value='{}' name='command'>{}<br>".format(
-                i, i)
-        commandStr += """</div>
-        <div style="
-            width: 27%;
-            float: left;">
-        <h2>请选择因变量</h2>"""
-        for i in title:
-            commandStr += "<input type='radio' value='{}' name='dependent'>{}<br>".format(
-                i, i)
-        commandStr += """</div>
-        <div style="
-                width: 27%;
-                display: block;
-                text-align: left;
-                float: left;">
-            <h2>请选择自变量</h2>"""
-        for i in title:
-            commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(
-                i, i)
-        commandStr += """ </div><br /><br/>
-            <center><input type="submit" value="next" style="height: 40px; font-size: 24px; color: #000000;"/></center>
-        </form></div><br>"""
-        session["ans"] = ans
-        return """<html>
-                    <head>
-                        <title>ans</title>
-                    </head>
-                    <body>
-                    <a href="/classic" target="_blank">test hypothesis</a><br><a href="/">退出登录</a>
-                    <center>
-                        <h1>结果</h1>
-                        <p>{}</p>
-                        <a href="/datainfo">Click to Download the Result</a>
-                        <div>{}</div>
-                        {}
-                        <a href="./check">preview again</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{}">download your raw data</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="./browse" target="_blank">view data</a></center>
-                        {}<br>
-                    </body>
-                    </html>
-                """.format(gdnfile, img, content, filename, commandStr)
+            <h2>请选择因变量</h2>"""
+            for i in title:
+                commandStr += "<input type='radio' value='{}' name='dependent'>{}<br>".format(
+                    i, i)
+            commandStr += """</div>
+            <div style="
+                    width: 27%;
+                    display: block;
+                    text-align: left;
+                    float: left;">
+                <h2>请选择自变量</h2>"""
+            for i in title:
+                commandStr += "<input type='checkbox' value='{}' name='independent'>{}<br>".format(
+                    i, i)
+            commandStr += """ </div><br /><br/>
+                <center><input type="submit" value="next" style="height: 40px; font-size: 24px; color: #000000;"/></center>
+            </form></div><br>"""
+            session["ans"] = ans
+            return """<html>
+                        <head>
+                            <title>ans</title>
+                        </head>
+                        <body>
+                        <a href="/classic" target="_blank">test hypothesis</a><br><a href="/">退出登录</a>
+                        <center>
+                            <h1>结果</h1>
+                            <p>{}</p>
+                            <a href="/datainfo">Click to Download the Result</a>
+                            <div>{}</div>
+                            {}
+                            <a href="./check">preview again</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="{}">download your raw data</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="./browse" target="_blank">view data</a></center>
+                            {}<br>
+                        </body>
+                        </html>
+                    """.format(gdnfile, img, content, filename, commandStr)
+        except:
+            session["error"] = "please check your data"
+            return redirect("error")
     except:
-        session["error"] = "please check your data"
+        session["error"]="please choose method/independent variable/dependent variable"
         return redirect("error")
 
 
