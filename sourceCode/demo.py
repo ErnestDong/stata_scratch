@@ -1,7 +1,8 @@
 import os
 
 def getAns(dependent: str, independent: list, session: dict) -> dict:
-    os.system("touch ~/Desktop/demo.csv")
+    # 为防止系统因素故注释掉
+    # os.system("touch ~/Desktop/demo.csv")
     ans={}
     return ans
 

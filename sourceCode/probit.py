@@ -8,6 +8,7 @@ from io import BytesIO
 from sourceCode.func import create_t_figure
 from sourceCode.func import create_p_figure
 from sourceCode.func import create_b_figure
+import platform
 
 
 def getAns(dependent: str, independent: list, session: dict) -> dict:
@@ -81,9 +82,14 @@ def showAns(dependent: str, ans: dict, session: dict) -> str:
     """turn to html pages"""
     if ans["flag"] == 1:
         username = session["username"]
-        csvfile = open("./static/{}/downloads/ans.csv".format(username),
-                       "w",
-                       encoding="utf-8")
+        if platform.system() == "windows":
+            csvfile = open(".\\static\\{}\\downloads\\ans.csv".format(username),
+                           "w",
+                           encoding="utf-8")
+        else:
+            csvfile = open("./static/{}/downloads/ans.csv".format(username),
+                           "w",
+                           encoding="utf-8")
         print("dependent variable: ", dependent, file=csvfile)
         print("variables,Coefficients,Standard Errors,t values,Probabilities",
               file=csvfile)
