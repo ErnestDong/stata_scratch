@@ -292,12 +292,12 @@ def show():
                             <div>{}</div>
                             {}
                             <a href="./check">preview again</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="{}">download your raw data</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="./static/{}/uploads/{}">download your raw data</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="./browse" target="_blank">view data</a></center>
                             {}<br>
                         </body>
                         </html>
-                    """.format(gdnfile, img, content, filename, commandStr)
+                    """.format(gdnfile, img, content, name,filename.split('/')[-1], commandStr)
         except:
             session["error"] = "please check your data"
             return redirect("error")
