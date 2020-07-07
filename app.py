@@ -2,23 +2,21 @@
 web app
 """
 import os
-from os import path
-import shutil
 import pickle
-from flask import Flask, request, render_template, redirect
-from werkzeug.utils import secure_filename
+import shutil
+from os import path
+
 import pandas as pd
-from sourceCode import linear_reg
-from sourceCode import exp_reg_model
-from sourceCode import log_lin_model
-from sourceCode import lin_log_model
-from sourceCode import logit
-from sourceCode import probit
+from flask import Flask, redirect, render_template, request
+from werkzeug.utils import secure_filename
+
+from sourceCode import (exp_reg_model, lin_log_model, linear_reg,
+                        log_lin_model, logit, probit)
+from sourceCode.code import decode, encode
 from sourceCode.Colinearity import auxiliary_regression
+from sourceCode.func import get_corr, gethtml
 from sourceCode.Hausman import hausmantest
 from sourceCode.White import whitetest
-from sourceCode.func import get_corr, gethtml
-from sourceCode.code import encode,decode
 
 app = Flask(__name__)
 commandList = [
@@ -297,12 +295,12 @@ def show():
                             {}<br>
                         </body>
                         </html>
-                    """.format(gdnfile, img, content, name,filename.split('/')[-1], commandStr)
+                    """.format(gdnfile, img, content, name, filename.split('/')[-1], commandStr)
         except:
             session["error"] = "please check your data"
             return redirect("error")
     except:
-        session["error"]="please choose method/independent variable/dependent variable"
+        session["error"] = "please choose method/independent variable/dependent variable"
         return redirect("error")
 
 
@@ -314,7 +312,7 @@ def testClassic():
         alert("检验是否满足古典假定");
       }
     </script>"""
-    helpfunction="""    
+    helpfunction = """
     <script>
       function help() {
         alert("检验古典假定是否被满足");
@@ -326,7 +324,6 @@ def testClassic():
                   <head>
                     <meta charset="UTF-8" />
                         {}
-                        
                     <title>Test Hypothesis</title>
                   </head>
                   <body>
