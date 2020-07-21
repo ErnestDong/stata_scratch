@@ -71,12 +71,14 @@ def passwd():
             passwd = request.form["addpwd"]
             legalstr = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890"
             if name == "" or passwd == "":
-                return render_template("login.html",
-                                       script="alert('please check your name or password')")
+                return render_template(
+                    "login.html",
+                    script="alert('please check your name or password')")
             for i in name + passwd:
                 if i not in legalstr:
-                    return render_template("login.html",
-                                           script="alert('name or password is illegal')")
+                    return render_template(
+                        "login.html",
+                        script="alert('name or password is illegal')")
             with open("users_info.pickle", "rb") as f:
                 data = decode(pickle.load(f))
             if name in data:
@@ -111,8 +113,7 @@ def upload():
     if request.method == 'POST':
         f = request.files["file"]
         base_path = path.abspath(path.dirname(__file__))
-        upload_path = path.join(base_path,
-                                'static/{}/uploads/'.format(name))
+        upload_path = path.join(base_path, 'static/{}/uploads/'.format(name))
         if f.filename[-4:] != ".csv":
             session["error"] = "csv needed"
             return redirect("error")
@@ -295,12 +296,14 @@ def show():
                             {}<br>
                         </body>
                         </html>
-                    """.format(gdnfile, img, content, name, filename.split('/')[-1], commandStr)
+                    """.format(gdnfile, img, content, name,
+                               filename.split('/')[-1], commandStr)
         except:
             session["error"] = "please check your data"
             return redirect("error")
     except:
-        session["error"] = "please choose method/independent variable/dependent variable"
+        session[
+            "error"] = "please choose method/independent variable/dependent variable"
         return redirect("error")
 
 

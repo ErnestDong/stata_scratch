@@ -42,3 +42,16 @@ os: macOS 10.15.4
 ```python
 python3 app.py
 ```
+
+
+## 运行截图
+
+![login]( ./static/pic/readmepic/login.png )
+![upload]( ./static/pic/readmepic/upload.png )
+![clean]( ./static/pic/readmepic/clean.png )
+![figure]( ./static/pic/readmepic/figure.png )
+![matrix1]( ./static/pic/readmepic/matrix1.png )
+![matrix2]( ./static/pic/readmepic/matrix2.png )
+![classic]( ./static/pic/readmepic/classic.png )
+![browse]( ./static/pic/readmepic/browse.png )
+![ans]( ./static/pic/readmepic/ans.png )
